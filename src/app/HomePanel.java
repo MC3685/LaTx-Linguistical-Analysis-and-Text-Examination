@@ -3,6 +3,11 @@ package app;
 import javax.swing.*;
 import java.awt.*;
 
+import analysis.AnalysisEngine;
+import analysis.AnalysisResult;
+import components.FontLoader;
+
+
 public class HomePanel extends JPanel {
 
     private JTextArea textA;
@@ -12,6 +17,13 @@ public class HomePanel extends JPanel {
     private JTextField titleB;
 
     private MainFrame frame;
+
+    private static final Font HKModular =
+            FontLoader.load("HKModular-Bold.otf", 1f);
+
+    private static final Font Architype =
+            FontLoader.load("Architype-Aubette.ttf", 1f);
+
 
     public HomePanel(MainFrame frame) {
 
@@ -33,10 +45,9 @@ public class HomePanel extends JPanel {
 
         title.setForeground(Theme.PURPLE);
 
-        title.setFont(
-                new Font("Orbitron",
-                        Font.BOLD,
-                        34));
+        title.setFont(Architype.deriveFont(40f));
+
+
 
         add(title);
 

@@ -1,8 +1,9 @@
 package app;
 
-//import components.GlassCard;
-//import components.MetricBar;
-//import components.CircularScorePanel;
+import components.GlassCard;
+import components.MetricBar;
+import components.CircularScorePanel;
+import components.FontLoader;
 
 
 import javax.swing.*;
@@ -10,10 +11,15 @@ import java.awt.*;
 
 public class ResultsPanel extends JPanel {
 
+    private static final Font HKModular =
+            FontLoader.load("HKModular-Bold.otf", 1f);
+
+    private static final Font Architype =
+            FontLoader.load("Architype-Aubette.ttf", 1f);
+
     public ResultsPanel() {
 
-        setBackground(
-                Theme.BACKGROUND);
+        setBackground(Theme.BACKGROUND);
 
         setLayout(null);
 
@@ -22,40 +28,25 @@ public class ResultsPanel extends JPanel {
 
     private void buildDashboard() {
 
-        JLabel title =
-                new JLabel(
-                        "ANALYSIS RESULTS");
+        JLabel title = new JLabel("ANALYSIS RESULTS");
 
-        title.setFont(
-                new Font(
-                        "Orbitron",
-                        Font.BOLD,
-                        34));
+        title.setFont(new Font("Architype", Font.BOLD, 34));
 
-        title.setForeground(
-                Theme.TEXT);
+        title.setForeground(Theme.TEXT);
 
         title.setBounds(40, 20, 600, 50);
 
         add(title);
 
-        GlassCard chartCard =
-                new GlassCard();
+        GlassCard chartCard = new GlassCard();
 
-        chartCard.setBounds(
-                140,
-                130,
-                520,
-                260);
+        chartCard.setBounds(140, 130, 520, 260);
 
-        chartCard.add(
-                new JLabel(
-                        "Sentence Length Distribution"));
+        chartCard.add(new JLabel("Sentence Length Distribution"));
 
         add(chartCard);
 
-        GlassCard metrics =
-                new GlassCard();
+        GlassCard metrics = new GlassCard();
 
         metrics.setBounds(
                 700, 130, 400, 260);
@@ -67,77 +58,40 @@ public class ResultsPanel extends JPanel {
                 new MetricBar("Function Words", 93, Theme.PURPLE));
 
         metrics.add(
-                new MetricBar(
-                        "Sentence Structure",
-                        85,
-                        Theme.BLUE));
+                new MetricBar("Sentence Structure", 85, Theme.BLUE));
 
         metrics.add(
-                new MetricBar(
-                        "Vocabulary",
-                        78,
-                        Theme.BLUE));
+                new MetricBar("Vocabulary", 78, Theme.BLUE));
 
         metrics.add(
-                new MetricBar(
-                        "Punctuation",
-                        90,
-                        Theme.SUCCESS));
+                new MetricBar("Punctuation", 90, Theme.SUCCESS));
 
         metrics.add(
-                new MetricBar(
-                        "Rhythm",
-                        82,
-                        Theme.SUCCESS));
+                new MetricBar("Rhythm", 82, Theme.SUCCESS));
 
         metrics.add(
-                new MetricBar(
-                        "Common Phrases",
-                        76,
-                        Color.YELLOW));
+                new MetricBar("Common Phrases", 76, Color.YELLOW));
 
         add(metrics);
 
-        GlassCard score =
-                new GlassCard();
+        GlassCard score = new GlassCard();
 
-        score.setBounds(
-                140,
-                420,
-                320,
-                300);
+        score.setBounds(140, 420, 320, 300);
 
-        score.setLayout(
-                new BorderLayout());
+        score.setLayout(new BorderLayout());
 
-        score.add(
-                new CircularScorePanel());
+        score.add(new CircularScorePanel());
 
         add(score);
 
-        GlassCard words =
-                new GlassCard();
+        GlassCard words = new GlassCard();
 
-        words.setBounds(
-                500,
-                420,
-                600,
-                300);
+        words.setBounds(500, 420, 600, 300);
 
         JTable table =
                 new JTable(
-                        new Object[][]{
-                                {"however",28,26,"96%"},
-                                {"therefore",23,22,"95%"},
-                                {"furthermore",19,18,"95%"},
-                                {"significant",17,16,"94%"}
-                        },
-                        new Object[]{
-                                "Word",
-                                "Text A",
-                                "Text B",
-                                "Similarity"
-                        });
+                    new Object[][]{{"however",28,26,"96%"}, {"therefore",23,22,"95%"}, {"furthermore",19,18,"95%"}, {"significant",17,16,"94%"}},
+                        new Object[]{"Word","Text A", "Text B", "Similarity"});
 
         words.add(
                 new JScrollPane(table));

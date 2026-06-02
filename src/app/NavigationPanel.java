@@ -4,7 +4,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.net.URI;
 
+import components.FontLoader;
+
 public class NavigationPanel extends JPanel {
+
+    private static final Font HKModular =
+            FontLoader.load("HKModular-Bold.otf", 1f);
 
     public NavigationPanel(MainFrame frame) {
 
@@ -16,18 +21,15 @@ public class NavigationPanel extends JPanel {
 
         add(Box.createVerticalStrut(80));
 
-        add(navButton("🏠 HOME", e ->
-                frame.showHome()));
+        add(navButton(" !! HOME", e -> frame.showHome()));
 
         add(Box.createVerticalStrut(40));
 
-        add(navButton("📰 REPORTS", e ->
-                frame.showResults()));
+        add(navButton("-- REPORTS", e -> frame.showResults()));
 
         add(Box.createVerticalStrut(40));
 
-        add(navButton("⚙ SETTINGS", e ->
-                frame.showSettings()));
+        add(navButton("# SETTINGS", e -> frame.showSettings()));
 
         add(Box.createVerticalStrut(40));
 
@@ -36,16 +38,15 @@ public class NavigationPanel extends JPanel {
 
         add(Box.createVerticalStrut(40));
 
-        add(navButton("★ RATE US", e ->
+        add(navButton("% RATE US", e ->
                 openWebsite()));
     }
 
-    private JButton navButton(
-            String text,
-            java.awt.event.ActionListener listener) {
+    private JButton navButton(String text, java.awt.event.ActionListener listener) {
 
         JButton button = new JButton(text);
 
+        button.setFont(HKModular.deriveFont(15f));
         button.setFocusPainted(false);
 
         button.setBorderPainted(false);
@@ -84,12 +85,8 @@ public class NavigationPanel extends JPanel {
     private void openWebsite() {
 
         try {
-
             Desktop.getDesktop().browse(
-                    new URI(
-                            "https://github.com"
-                    ));
-
+                    new URI("https://github.com/MC3685/LaTx"));
         } catch(Exception ignored) {}
     }
 }

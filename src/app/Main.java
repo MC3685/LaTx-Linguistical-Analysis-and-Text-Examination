@@ -1,6 +1,5 @@
 package app;
 
-//import components.GlassCard;
 
 import javax.swing.*;
 
