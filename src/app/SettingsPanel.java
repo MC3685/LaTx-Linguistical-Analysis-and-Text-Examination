@@ -46,6 +46,22 @@ public class SettingsPanel extends JPanel {
         SwingUtilities.invokeLater(this::updateLayout);
     }
 
+    private void applyTheme() {
+
+        setBackground(Theme.BACKGROUND);
+
+        settingsCard.setBackground(Theme.CARD);
+
+        modeLabelLeft.setForeground(Theme.TEXT);
+        modeLabelRight.setForeground(Theme.TEXT);
+
+        footer.setForeground(Theme.SUBTEXT);
+
+        title.setForeground(Theme.PURPLE);
+
+        repaint();
+    }
+
     private void buildUI() {
 
         title = new JLabel(
@@ -124,11 +140,15 @@ public class SettingsPanel extends JPanel {
             if (light) {
                 Theme.setLightTheme();
                 themeToggle.setText("Light");
+
             } else {
                 Theme.setDarkTheme();
                 themeToggle.setText("Dark");
 
+
             }
+
+            applyTheme();
         });
 
         settingsCard.add(themeToggle);
