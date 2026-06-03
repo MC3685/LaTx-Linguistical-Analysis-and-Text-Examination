@@ -8,18 +8,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import java.awt.BorderLayout;
-import java.awt.FileDialog;
 import java.io.File;
 import java.io.FilenameFilter;
-
+import java.nio.file.Files;
 
 public class HomePanel extends JPanel {
 
@@ -105,10 +96,12 @@ public class HomePanel extends JPanel {
         cardA.add(scrollA);
         cardB.add(scrollB);
 
+        // Pass the respective button and text area targets to the unified file picker
         importA = new JButton("ADD FILE");
-        importA.addActionListener(e -> openTextFilePicker());
+        importA.addActionListener(e -> FilePicker(frame, importA, textA));
 
         importB = new JButton("ADD FILE");
+        importB.addActionListener(e -> FilePicker(frame, importB, textB));
 
         cardA.add(importA);
         cardB.add(importB);
@@ -257,41 +250,56 @@ public class HomePanel extends JPanel {
 
         return area;
     }
-}
-private void openTextFilePicker() {
-    FileDialog fileDialog = new FileDialog((java.awt.Frame) this, "Select TXT File", FileDialog.LOAD);
 
-    // 2. Set extension filter to only allow .txt files
-    fileDialog.setFilenameFilter(new FilenameFilter() {
-        @Override
-        public boolean accept(File dir, String name) {
-            return name.toLowerCase().endsWith(".txt");
+    /**
+     * Reusable File Dialog targeting specific buttons and text areas.
+     */
+    public void FilePicker(MainFrame parent, JButton targetButton, JTextArea targetTextArea) {
+        FileDialog fileDialog = new FileDialog(parent, "Open Text File", FileDialog.LOAD);
+
+        // Only accept .txt files
+        fileDialog.setFilenameFilter(new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+                return name.toLowerCase().endsWith(".txt");
+            }
+        });
+
+        fileDialog.setVisible(true);
+
+        String filename = fileDialog.getFile();
+        String directory = fileDialog.getDirectory();
+        fileDialog.dispose();
+
+        // Check if user cancelled selection
+        if (filename == null) {
+            return;
         }
-    });
 
-    // 3. Make dialog visible (blocks background window execution)
-    fileDialog.setVisible(true);
+        File chosenFile = new File(directory, filename);
 
-    // 4. Handle results
-    String directory = fileDialog.getDirectory();
-    String filename = fileDialog.getFile();
+        // Read file contents into target JTextArea and update the target button
+        try {
+            String content = Files.readString(chosenFile.toPath());
+            targetTextArea.setText(content);
 
-    if (filename != null) {
-        File selectedFile = new File(directory, filename);
-        handleSuccessfulImport(selectedFile);
-    } else {
-        System.out.println("User canceled selection.");
+            handleSuccessfulImport(chosenFile, targetButton);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this,
+                    "Failed to read file: " + ex.getMessage(),
+                    "Import Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }
-}
 
-private void handleSuccessfulImport(File file) {
-    // Confirmation alert to user
-    JOptionPane.showMessageDialog(this,
-            "Successfully imported: " + file.getName(),
-            "Import Success",
-            JOptionPane.INFORMATION_MESSAGE);
+    private void handleSuccessfulImport(File file, JButton targetButton) {
+        JOptionPane.showMessageDialog(this,
+                "Successfully imported: " + file.getName(),
+                "Import Success",
+                JOptionPane.INFORMATION_MESSAGE);
 
-    // Permanently disable the button to prevent future clicks
-    importButton.setEnabled(false);
-    importButton.setText("File Already Imported");
+        // Update button parameters as requested
+        targetButton.setText(file.getName());
+        targetButton.setEnabled(false);
+    }
 }
