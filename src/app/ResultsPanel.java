@@ -1,9 +1,7 @@
 package app;
 
-import components.GlassCard;
-import components.MetricBar;
-import components.CircularScorePanel;
-import components.FontLoader;
+import components.*;
+import analysis.AnalysisResult;
 
 
 import javax.swing.*;
@@ -17,6 +15,8 @@ public class ResultsPanel extends JPanel {
     private static final Font Architype =
             FontLoader.load("Architype-Aubette.ttf", 1f);
 
+    private CircularScorePanel scorePanel;
+
     public ResultsPanel() {
 
         setBackground(Theme.BACKGROUND);
@@ -24,6 +24,13 @@ public class ResultsPanel extends JPanel {
         setLayout(null);
 
         buildDashboard();
+    }
+
+    public void updateResults(
+            AnalysisResult result) {
+
+        scorePanel.setScore(
+                result.getSimilarity());
     }
 
     private void buildDashboard() {
@@ -80,7 +87,11 @@ public class ResultsPanel extends JPanel {
 
         score.setLayout(new BorderLayout());
 
-        score.add(new CircularScorePanel());
+
+        scorePanel =
+                new CircularScorePanel();
+
+        score.add(scorePanel);
 
         add(score);
 
@@ -93,23 +104,16 @@ public class ResultsPanel extends JPanel {
                     new Object[][]{{"however",28,26,"96%"}, {"therefore",23,22,"95%"}, {"furthermore",19,18,"95%"}, {"significant",17,16,"94%"}},
                         new Object[]{"Word","Text A", "Text B", "Similarity"});
 
-        words.add(
-                new JScrollPane(table));
+        words.add(new JScrollPane(table));
 
         add(words);
 
-        GlassCard conclusion =
-                new GlassCard();
+        GlassCard conclusion = new GlassCard();
 
-        conclusion.setBounds(
-                140,
-                760,
-                960,
-                90);
+        conclusion.setBounds(140, 760, 960, 90);
 
         conclusion.add(
-                new JLabel(
-                        "Conclusion: High probability of common authorship."));
+                new JLabel("Conclusion: High probability of common authorship."));
 
         add(conclusion);
     }

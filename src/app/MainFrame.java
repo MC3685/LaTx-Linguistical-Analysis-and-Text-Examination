@@ -2,6 +2,7 @@ package app;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 
 public class MainFrame extends JFrame {
 
@@ -20,9 +21,7 @@ public class MainFrame extends JFrame {
         setSize(1400,800  );
         setLocationRelativeTo(null);
 
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-
-        setUndecorated(true);
+        setUndecorated(false);
 
         cardLayout = new CardLayout();
 
@@ -32,7 +31,7 @@ public class MainFrame extends JFrame {
 
         resultsPanel = new ResultsPanel();
 
-        settingsPanel = createSettingsPanel();
+        settingsPanel = new SettingsPanel();
 
         contentPanel.add(homePanel,"HOME");
         contentPanel.add(resultsPanel,"RESULTS");
@@ -59,6 +58,10 @@ public class MainFrame extends JFrame {
 
     public void showResults() {
         cardLayout.show(contentPanel,"RESULTS");
+    }
+
+    public ResultsPanel getResultsPanel() {
+        return resultsPanel;
     }
 
     public void showSettings() {

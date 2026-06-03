@@ -6,32 +6,23 @@ public class Theme {
 
     public static boolean DARK_MODE = true;
 
-    public static Color BACKGROUND =
-            new Color(3, 12, 35);
+    public static Color BACKGROUND = new Color(3, 12, 35);
 
-    public static Color SIDEBAR =
-            new Color(9, 19, 44);
+    public static Color SIDEBAR = new Color(9, 19, 44);
 
-    public static Color CARD =
-            new Color(14, 25, 55);
+    public static Color CARD = new Color(14, 25, 55);
 
-    public static Color BORDER =
-            new Color(46, 58, 102);
+    public static Color BORDER = new Color(46, 58, 102);
 
-    public static Color TEXT =
-            new Color(240,240,245);
+    public static Color TEXT = new Color(240,240,245);
 
-    public static Color SUBTEXT =
-            new Color(150,160,190);
+    public static Color SUBTEXT = new Color(150,160,190);
 
-    public static Color PURPLE =
-            new Color(148,98,255);
+    public static Color PURPLE = new Color(148,98,255);
 
-    public static Color BLUE =
-            new Color(50,150,230);
+    public static Color BLUE = new Color(50,150,230);
 
-    public static Color SUCCESS =
-            new Color(52,211,153);
+    public static Color SUCCESS = new Color(52,211,153);
 
     public static void setDarkTheme() {
 

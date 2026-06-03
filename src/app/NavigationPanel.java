@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.net.URI;
 
+
 import components.FontLoader;
 
 public class NavigationPanel extends JPanel {
@@ -34,7 +35,7 @@ public class NavigationPanel extends JPanel {
         add(Box.createVerticalStrut(40));
 
         add(navButton("? HELP", e ->
-                showHelp()));
+                showHelp(frame)));
 
         add(Box.createVerticalStrut(40));
 
@@ -65,9 +66,57 @@ public class NavigationPanel extends JPanel {
         return button;
     }
 
-    private void showHelp() {
+    private void showHelp(MainFrame frame) {
 
-        JOptionPane.showMessageDialog(
+        JDialog instructionsWindow = new JDialog(frame, "Instructions", true);
+        instructionsWindow.setSize(350, 300);
+        instructionsWindow.setLocationRelativeTo(null);
+        instructionsWindow.setLayout(new BorderLayout());
+        ((JComponent) instructionsWindow.getContentPane()).setBorder(
+                BorderFactory.createLineBorder(new Color(244,234,251), 5)); //change color
+
+
+        JTextArea instructionsArea = new JTextArea(
+                " Instructions:\n\n" +
+                        " 1. Select a shape\n" +
+                        " 2. Enter dimensions\n" +
+                        "    - Cannot be decimals\n" +
+                        "    - Cannot be negative numbers\n" +
+                        "    - Cannot include letters\n" +
+                        "    - Cannot be longer than 6 digits\n" +
+                        " 3. Click Calculate\n" +
+                        "    - Dimensions cannot be empty\n\n" +
+                        " Dimensions needed for each shape:\n" +
+                        " - Cube: side\n" +
+                        " - Sphere: radius\n" +
+                        " - Cone: radius & height\n" +
+                        " - Cylinder: radius & height\n" +
+                        " - Prism: side & height\n" +
+                        " - Tetrahedron: side"
+        );
+        instructionsArea.setEditable(false);
+        instructionsArea.setFocusable(false);
+        instructionsArea.setLineWrap(true);
+        instructionsArea.setWrapStyleWord(true);
+        instructionsArea.setBackground(new Color(244,234,251)); //change color
+        instructionsArea.setFont(new Font("Segoe UI", Font.PLAIN, 14)); //change font
+
+        // Back button
+        JButton back = new JButton("Back");
+        back.setFont(new Font("Segoe UI", Font.BOLD, 16)); //change font
+        back.setBackground(new Color(177,149,192)); //change color
+        back.setForeground(new Color(255, 255, 255)); //change color
+        back.setBorder(BorderFactory.createLineBorder(new Color(137, 101, 157), 2)); //change color
+        back.addActionListener(e -> instructionsWindow.dispose()); // closes popup
+
+        // Add to layout
+        instructionsWindow.add(new JScrollPane(instructionsArea), BorderLayout.CENTER);
+        instructionsWindow.add(back, BorderLayout.SOUTH);
+
+        // Center popup
+        instructionsWindow.setLocationRelativeTo(this);
+        instructionsWindow.setVisible(true);
+        /*JOptionPane.showMessageDialog(
                 this,
                 """
                 Linguistic Analysis Tool
@@ -79,7 +128,7 @@ public class NavigationPanel extends JPanel {
 
                 Designed for stylometric analysis.
                 """
-        );
+        );*/
     }
 
     private void openWebsite() {
