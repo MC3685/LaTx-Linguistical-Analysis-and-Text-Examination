@@ -124,13 +124,9 @@ public class HomePanel extends JPanel {
             AnalysisEngine engine =
                     new AnalysisEngine();
 
-            AnalysisResult result =
-                    engine.analyze(
-                            textA.getText(),
-                            textB.getText());
+            AnalysisResult result = engine.analyze(textA.getText(), textB.getText());
 
-            frame.getResultsPanel()
-                    .updateResults(result);
+            frame.getResultsPanel().updateResults(result);
 
             frame.showResults();
         });
@@ -145,83 +141,38 @@ public class HomePanel extends JPanel {
 
         int topMargin = 40;
 
-        title.setBounds(
-                0,
-                topMargin,
-                w,
-                50);
+        title.setBounds(0, topMargin, w, 50);
 
-        subtitle.setBounds(
-                0,
-                topMargin + 55,
-                w,
-                30);
+        subtitle.setBounds(0, topMargin + 55, w, 30);
 
-        int gap =
-                Math.max(20, w / 50);
+        int gap = Math.max(20, w / 50);
 
-        int cardWidth =
-                Math.min(
-                        500,
-                        (w - 300 - gap) / 2);
+        int cardWidth = Math.min(500, (w - 300 - gap) / 2);
 
-        int cardHeight =
-                Math.max(
-                        350,
-                        h - 340);
+        int cardHeight = Math.max(350, h - 340);
 
         int cardY = 160;
 
-        int totalWidth =
-                cardWidth * 2 + gap;
+        int totalWidth = cardWidth * 2 + gap;
 
-        int startX =
-                (w - totalWidth) / 2;
+        int startX = (w - totalWidth) / 2;
 
-        cardA.setBounds(
-                startX,
-                cardY,
-                cardWidth,
-                cardHeight);
+        cardA.setBounds(startX, cardY, cardWidth, cardHeight);
 
-        cardB.setBounds(
-                startX + cardWidth + gap,
-                cardY,
-                cardWidth,
-                cardHeight);
+        cardB.setBounds(startX + cardWidth + gap, cardY, cardWidth, cardHeight);
 
         int scrollMargin = 25;
 
-        scrollA.setBounds(
-                scrollMargin,
-                30,
-                cardWidth - 50,
-                cardHeight - 170);
+        scrollA.setBounds(scrollMargin, 30, cardWidth - 50, cardHeight - 170);
 
-        scrollB.setBounds(
-                scrollMargin,
-                30,
-                cardWidth - 50,
-                cardHeight - 170);
+        scrollB.setBounds(scrollMargin, 30, cardWidth - 50, cardHeight - 170);
 
-        importA.setBounds(
-                cardWidth / 2 - 125,
-                cardHeight - 110,
-                250,
-                45);
+        importA.setBounds(cardWidth / 2 - 125, cardHeight - 110, 250, 45);
 
-        importB.setBounds(
-                cardWidth / 2 - 125,
-                cardHeight - 110,
-                250,
-                45);
+        importB.setBounds(cardWidth / 2 - 125, cardHeight - 110, 250, 45);
 
 
-        analyzeButton.setBounds(
-                w / 2 - 150,
-                h - 80,
-                300,
-                50);
+        analyzeButton.setBounds(w / 2 - 150, h - 80, 300, 50);
     }
 
     private JPanel createTextCard(String label) {
@@ -230,10 +181,7 @@ public class HomePanel extends JPanel {
 
         panel.setBackground(Theme.CARD);
 
-        panel.setBorder(
-                BorderFactory.createLineBorder(
-                        Theme.BORDER,
-                        2));
+        panel.setBorder(BorderFactory.createLineBorder(Theme.BORDER, 2));
 
         lbl = new JLabel(label);
 
@@ -242,11 +190,7 @@ public class HomePanel extends JPanel {
         lbl.setHorizontalAlignment(
                 SwingConstants.CENTER);
 
-        lbl.setBounds(
-                0,
-                0,
-                200,
-                25);
+        lbl.setBounds(0, 0, 200, 25);
 
         panel.add(lbl);
 
