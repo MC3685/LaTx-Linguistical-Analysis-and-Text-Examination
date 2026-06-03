@@ -11,6 +11,10 @@ import java.awt.event.ComponentEvent;
 
 public class HomePanel extends JPanel {
 
+    private JPanel panel;
+
+    private JTextArea area;
+
     private JTextArea textA;
     private JTextArea textB;
 
@@ -27,6 +31,7 @@ public class HomePanel extends JPanel {
 
     private JLabel title;
     private JLabel subtitle;
+    private JLabel lbl;
 
     private final MainFrame frame;
 
@@ -55,6 +60,19 @@ public class HomePanel extends JPanel {
 
         SwingUtilities.invokeLater(this::updateLayout);
     }
+
+    public void applyTheme()
+    {
+        setBackground(Theme.BACKGROUND);
+        subtitle.setForeground(Color.BLACK);
+        area.setCaretColor(Theme.TEXT);
+        area.setForeground(Theme.TEXT);
+        area.setBackground(Theme.BACKGROUND);
+        lbl.setForeground(Theme.SUBTEXT);
+        panel.setBackground(Theme.CARD);
+
+    }
+
 
     private void buildUI() {
 
@@ -208,7 +226,7 @@ public class HomePanel extends JPanel {
 
     private JPanel createTextCard(String label) {
 
-        JPanel panel = new JPanel(null);
+        panel = new JPanel(null);
 
         panel.setBackground(Theme.CARD);
 
@@ -217,7 +235,7 @@ public class HomePanel extends JPanel {
                         Theme.BORDER,
                         2));
 
-        JLabel lbl = new JLabel(label);
+        lbl = new JLabel(label);
 
         lbl.setForeground(Theme.SUBTEXT);
 
@@ -237,12 +255,14 @@ public class HomePanel extends JPanel {
 
     private JTextArea createTextArea() {
 
-        JTextArea area = new JTextArea();
+        area = new JTextArea();
 
         area.setBackground(Theme.BACKGROUND);
+
         area.setForeground(Theme.TEXT);
 
         area.setCaretColor(Theme.TEXT);
+
 
         area.setLineWrap(true);
         area.setWrapStyleWord(true);

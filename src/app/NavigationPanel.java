@@ -15,6 +15,10 @@ public class NavigationPanel extends JPanel {
     private static final Font Architype =
             FontLoader.load("Architype-Aubette.ttf", 1f);
 
+    private JButton button;
+    private JDialog instructionsWindow;
+    private JTextArea instructionsArea;
+
     public NavigationPanel(MainFrame frame) {
 
         setPreferredSize(new Dimension(250,0));
@@ -46,9 +50,21 @@ public class NavigationPanel extends JPanel {
                 openWebsite()));
     }
 
+    public void applyTheme()
+    {
+        setBackground(Theme.SIDEBAR);
+        button.setBackground(Theme.SIDEBAR); //change
+        button.setForeground(Theme.PURPLE); //change
+        ((JComponent) instructionsWindow.getContentPane()).setBorder(
+                BorderFactory.createLineBorder(Theme.CARD, 5));
+        instructionsArea.setBackground(Theme.BACKGROUND); //change color - done
+        instructionsArea.setForeground(Theme.TEXT);
+
+    }
+
     private JButton navButton(String text, java.awt.event.ActionListener listener) {
 
-        JButton button = new JButton(text);
+        button = new JButton(text);
 
         button.setFont(HKModular.deriveFont(15f));
         button.setFocusPainted(false);
@@ -72,7 +88,7 @@ public class NavigationPanel extends JPanel {
 
     private void showHelp(MainFrame frame) {
 
-        JDialog instructionsWindow = new JDialog(frame, false);
+        instructionsWindow = new JDialog(frame, false);
         instructionsWindow.setSize(500, 500);
         instructionsWindow.setLocationRelativeTo(null);
         instructionsWindow.setLayout(new BorderLayout());
@@ -80,7 +96,7 @@ public class NavigationPanel extends JPanel {
                 BorderFactory.createLineBorder(Theme.CARD, 5)); //change color - done
 
 
-        JTextArea instructionsArea = new JTextArea( // change intructions
+        instructionsArea = new JTextArea( // change intructions
                 " Instructions:\n\n" +
                         " 1. Select a shape\n" +
                         " 2. Enter dimensions\n" +

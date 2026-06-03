@@ -22,6 +22,7 @@ public class SettingsPanel extends JPanel {
 
     private JButton exitButton;
     private JLabel footer;
+    private MainFrame frame;
 
     private static final Font Architype =
             FontLoader.load("Architype-Aubette.ttf", 1f);
@@ -29,8 +30,9 @@ public class SettingsPanel extends JPanel {
     private static final Font HKModular =
             FontLoader.load("HKModular-Bold.otf", 1f);
 
-    public SettingsPanel() {
+    public SettingsPanel(MainFrame frame) {
 
+        this.frame = frame;
         setBackground(Theme.BACKGROUND);
         setLayout(null);
 
@@ -46,7 +48,7 @@ public class SettingsPanel extends JPanel {
         SwingUtilities.invokeLater(this::updateLayout);
     }
 
-    private void applyTheme() {
+    public void applyTheme() {
 
         setBackground(Theme.BACKGROUND);
 
@@ -59,7 +61,6 @@ public class SettingsPanel extends JPanel {
 
         title.setForeground(Theme.PURPLE);
 
-        repaint();
     }
 
     private void buildUI() {
@@ -148,7 +149,7 @@ public class SettingsPanel extends JPanel {
 
             }
 
-            applyTheme();
+            frame.refreshTheme();
         });
 
         settingsCard.add(themeToggle);

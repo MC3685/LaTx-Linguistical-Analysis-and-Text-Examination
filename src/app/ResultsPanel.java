@@ -16,6 +16,7 @@ public class ResultsPanel extends JPanel {
             FontLoader.load("Architype-Aubette.ttf", 1f);
 
     private CircularScorePanel scorePanel;
+    private JLabel title;
 
     public ResultsPanel() {
 
@@ -24,6 +25,13 @@ public class ResultsPanel extends JPanel {
         setLayout(null);
 
         buildDashboard();
+    }
+
+    public void applyTheme()
+    {
+        setBackground(Theme.BACKGROUND);
+        title.setForeground(Theme.TEXT);
+
     }
 
     public void updateResults(
@@ -35,7 +43,7 @@ public class ResultsPanel extends JPanel {
 
     private void buildDashboard() {
 
-        JLabel title = new JLabel("ANALYSIS RESULTS");
+        title = new JLabel("ANALYSIS RESULTS");
 
         title.setFont(new Font("Architype", Font.BOLD, 34));
 
