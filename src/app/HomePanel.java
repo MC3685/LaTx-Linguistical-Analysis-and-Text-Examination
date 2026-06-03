@@ -14,6 +14,10 @@ import java.nio.file.Files;
 
 public class HomePanel extends JPanel {
 
+    private JPanel panel;
+
+    private JTextArea area;
+
     private JTextArea textA;
     private JTextArea textB;
 
@@ -32,6 +36,7 @@ public class HomePanel extends JPanel {
 
     private JLabel title;
     private JLabel subtitle;
+    private JLabel lbl;
 
     private final MainFrame frame;
 
@@ -60,6 +65,19 @@ public class HomePanel extends JPanel {
 
         SwingUtilities.invokeLater(this::updateLayout);
     }
+
+    public void applyTheme()
+    {
+        setBackground(Theme.BACKGROUND);
+        subtitle.setForeground(Color.BLACK);
+        area.setCaretColor(Theme.TEXT);
+        area.setForeground(Theme.TEXT);
+        area.setBackground(Theme.BACKGROUND);
+        lbl.setForeground(Theme.SUBTEXT);
+        panel.setBackground(Theme.CARD);
+
+    }
+
 
     private void buildUI() {
 
@@ -115,13 +133,9 @@ public class HomePanel extends JPanel {
             AnalysisEngine engine =
                     new AnalysisEngine();
 
-            AnalysisResult result =
-                    engine.analyze(
-                            textA.getText(),
-                            textB.getText());
+            AnalysisResult result = engine.analyze(textA.getText(), textB.getText());
 
-            frame.getResultsPanel()
-                    .updateResults(result);
+            frame.getResultsPanel().updateResults(result);
 
             frame.showResults();
         });
@@ -140,96 +154,52 @@ public class HomePanel extends JPanel {
 
         subtitle.setBounds(0, topMargin + 55, w, 30);
 
-        int gap =
-                Math.max(20, w / 50);
+        int gap = Math.max(20, w / 50);
 
-        int cardWidth =
-                Math.min(
-                        500,
-                        (w - 300 - gap) / 2);
+        int cardWidth = Math.min(500, (w - 300 - gap) / 2);
 
-        int cardHeight =
-                Math.max(
-                        350,
-                        h - 340);
+        int cardHeight = Math.max(350, h - 340);
 
         int cardY = 160;
 
-        int totalWidth =
-                cardWidth * 2 + gap;
+        int totalWidth = cardWidth * 2 + gap;
 
-        int startX =
-                (w - totalWidth) / 2;
+        int startX = (w - totalWidth) / 2;
 
-        cardA.setBounds(
-                startX,
-                cardY,
-                cardWidth,
-                cardHeight);
+        cardA.setBounds(startX, cardY, cardWidth, cardHeight);
 
-        cardB.setBounds(
-                startX + cardWidth + gap,
-                cardY,
-                cardWidth,
-                cardHeight);
+        cardB.setBounds(startX + cardWidth + gap, cardY, cardWidth, cardHeight);
 
         int scrollMargin = 25;
 
-        scrollA.setBounds(
-                scrollMargin,
-                30,
-                cardWidth - 50,
-                cardHeight - 170);
+        scrollA.setBounds(scrollMargin, 30, cardWidth - 50, cardHeight - 170);
 
-        scrollB.setBounds(
-                scrollMargin,
-                30,
-                cardWidth - 50,
-                cardHeight - 170);
+        scrollB.setBounds(scrollMargin, 30, cardWidth - 50, cardHeight - 170);
 
-        importA.setBounds(
-                cardWidth / 2 - 125,
-                cardHeight - 110,
-                250,
-                45);
+        importA.setBounds(cardWidth / 2 - 125, cardHeight - 110, 250, 45);
 
-        importB.setBounds(
-                cardWidth / 2 - 125,
-                cardHeight - 110,
-                250,
-                45);
+        importB.setBounds(cardWidth / 2 - 125, cardHeight - 110, 250, 45);
 
 
-        analyzeButton.setBounds(
-                w / 2 - 150,
-                h - 80,
-                300,
-                50);
+        analyzeButton.setBounds(w / 2 - 150, h - 80, 300, 50);
     }
 
     private JPanel createTextCard(String label) {
 
-        JPanel panel = new JPanel(null);
+        panel = new JPanel(null);
 
         panel.setBackground(Theme.CARD);
 
-        panel.setBorder(
-                BorderFactory.createLineBorder(
-                        Theme.BORDER,
-                        2));
+        panel.setBorder(BorderFactory.createLineBorder(Theme.BORDER, 2));
 
-        JLabel lbl = new JLabel(label);
+        lbl = new JLabel(label);
 
         lbl.setForeground(Theme.SUBTEXT);
 
         lbl.setHorizontalAlignment(
                 SwingConstants.CENTER);
 
-        lbl.setBounds(
-                0,
-                0,
-                200,
-                25);
+        lbl.setBounds(0, 0, 200, 25);
 
         panel.add(lbl);
 
@@ -238,12 +208,14 @@ public class HomePanel extends JPanel {
 
     private JTextArea createTextArea() {
 
-        JTextArea area = new JTextArea();
+        area = new JTextArea();
 
         area.setBackground(Theme.BACKGROUND);
+
         area.setForeground(Theme.TEXT);
 
         area.setCaretColor(Theme.TEXT);
+
 
         area.setLineWrap(true);
         area.setWrapStyleWord(true);

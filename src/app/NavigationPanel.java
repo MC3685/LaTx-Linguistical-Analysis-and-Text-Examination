@@ -3,9 +3,11 @@ package app;
 import javax.swing.*;
 import java.awt.*;
 import java.net.URI;
-
-
+import java.util.ArrayList;
+import java.util.List;
 import components.FontLoader;
+
+
 
 public class NavigationPanel extends JPanel {
 
@@ -14,6 +16,10 @@ public class NavigationPanel extends JPanel {
 
     private static final Font Architype =
             FontLoader.load("Architype-Aubette.ttf", 1f);
+
+    private final List<JButton> buttons = new ArrayList<>();
+    private JDialog instructionsWindow;
+    private JTextArea instructionsArea;
 
     public NavigationPanel(MainFrame frame) {
 
@@ -24,6 +30,8 @@ public class NavigationPanel extends JPanel {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         add(Box.createVerticalStrut(80));
+
+
 
         add(navButton(" !! HOME", e -> frame.showHome()));
 
@@ -46,6 +54,28 @@ public class NavigationPanel extends JPanel {
                 openWebsite()));
     }
 
+    public void applyTheme()
+    {
+        setBackground(Theme.SIDEBAR);
+        for (JButton button : buttons) {
+            button.setBackground(Theme.SIDEBAR);
+            button.setForeground(Theme.PURPLE);
+        }
+
+        if (instructionsWindow != null) {
+
+            ((JComponent) instructionsWindow.getContentPane())
+                    .setBorder(BorderFactory.createLineBorder(
+                            Theme.CARD, 5));
+
+            if (instructionsArea != null) {
+                instructionsArea.setBackground(Theme.BACKGROUND);
+                instructionsArea.setForeground(Theme.TEXT);
+            }
+        }
+
+    }
+
     private JButton navButton(String text, java.awt.event.ActionListener listener) {
 
         JButton button = new JButton(text);
@@ -53,26 +83,23 @@ public class NavigationPanel extends JPanel {
         button.setFont(HKModular.deriveFont(15f));
         button.setFocusPainted(false);
         button.setHorizontalAlignment(SwingConstants.LEFT);
-
         button.setBorderPainted(false);
-
-        button.setMaximumSize(
-                new Dimension(150,50));
-
+        button.setMaximumSize(new Dimension(150,50));
         button.setAlignmentX(CENTER_ALIGNMENT);
 
         button.setBackground(Theme.SIDEBAR);
-
         button.setForeground(Theme.PURPLE);
 
         button.addActionListener(listener);
+
+        buttons.add(button);
 
         return button;
     }
 
     private void showHelp(MainFrame frame) {
 
-        JDialog instructionsWindow = new JDialog(frame, false);
+        instructionsWindow = new JDialog(frame, false);
         instructionsWindow.setSize(500, 500);
         instructionsWindow.setLocationRelativeTo(null);
         instructionsWindow.setLayout(new BorderLayout());
@@ -80,7 +107,7 @@ public class NavigationPanel extends JPanel {
                 BorderFactory.createLineBorder(Theme.CARD, 5)); //change color - done
 
 
-        JTextArea instructionsArea = new JTextArea( // change intructions
+        instructionsArea = new JTextArea( // change intructions
                 " Instructions:\n\n" +
                         " 1. Select a shape\n" +
                         " 2. Enter dimensions\n" +

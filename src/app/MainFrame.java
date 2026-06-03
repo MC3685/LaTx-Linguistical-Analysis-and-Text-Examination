@@ -12,7 +12,8 @@ public class MainFrame extends JFrame {
 
     private HomePanel homePanel;
     private ResultsPanel resultsPanel;
-    private JPanel settingsPanel;
+    private SettingsPanel settingsPanel;
+    private NavigationPanel navigationPanel;
 
     public MainFrame() {
 
@@ -31,7 +32,9 @@ public class MainFrame extends JFrame {
 
         resultsPanel = new ResultsPanel();
 
-        settingsPanel = new SettingsPanel();
+        settingsPanel = new SettingsPanel(this);
+
+        navigationPanel = new NavigationPanel(this);
 
         contentPanel.add(homePanel,"HOME");
         contentPanel.add(resultsPanel,"RESULTS");
@@ -39,8 +42,23 @@ public class MainFrame extends JFrame {
 
         setLayout(new BorderLayout());
 
-        add(new NavigationPanel(this), BorderLayout.WEST);
+        add(navigationPanel, BorderLayout.WEST);
         add(contentPanel, BorderLayout.CENTER);
+    }
+
+    public void refreshTheme() {
+
+        homePanel.applyTheme();
+
+        resultsPanel.applyTheme();
+
+        settingsPanel.applyTheme();
+
+        navigationPanel.applyTheme();
+
+        SwingUtilities.updateComponentTreeUI(this);
+
+        repaint();
     }
 
     private JPanel createSettingsPanel() {
