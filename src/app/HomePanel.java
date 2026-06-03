@@ -9,6 +9,18 @@ import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import java.awt.BorderLayout;
+import java.awt.FileDialog;
+import java.io.File;
+import java.io.FilenameFilter;
+
+
 public class HomePanel extends JPanel {
 
     private JTextArea textA;
@@ -24,6 +36,8 @@ public class HomePanel extends JPanel {
 
     private JPanel cardA;
     private JPanel cardB;
+    JLabel LabelA = new JLabel("No file selected");
+    JLabel LabelB = new JLabel("No file selected");
 
     private JLabel title;
     private JLabel subtitle;
@@ -92,6 +106,8 @@ public class HomePanel extends JPanel {
         cardB.add(scrollB);
 
         importA = new JButton("ADD FILE");
+        importA.addActionListener(e -> openTextFilePicker());
+
         importB = new JButton("ADD FILE");
 
         cardA.add(importA);
@@ -127,17 +143,9 @@ public class HomePanel extends JPanel {
 
         int topMargin = 40;
 
-        title.setBounds(
-                0,
-                topMargin,
-                w,
-                50);
+        title.setBounds(0, topMargin, w, 50);
 
-        subtitle.setBounds(
-                0,
-                topMargin + 55,
-                w,
-                30);
+        subtitle.setBounds(0, topMargin + 55, w, 30);
 
         int gap =
                 Math.max(20, w / 50);
@@ -249,4 +257,41 @@ public class HomePanel extends JPanel {
 
         return area;
     }
+}
+private void openTextFilePicker() {
+    FileDialog fileDialog = new FileDialog((java.awt.Frame) this, "Select TXT File", FileDialog.LOAD);
+
+    // 2. Set extension filter to only allow .txt files
+    fileDialog.setFilenameFilter(new FilenameFilter() {
+        @Override
+        public boolean accept(File dir, String name) {
+            return name.toLowerCase().endsWith(".txt");
+        }
+    });
+
+    // 3. Make dialog visible (blocks background window execution)
+    fileDialog.setVisible(true);
+
+    // 4. Handle results
+    String directory = fileDialog.getDirectory();
+    String filename = fileDialog.getFile();
+
+    if (filename != null) {
+        File selectedFile = new File(directory, filename);
+        handleSuccessfulImport(selectedFile);
+    } else {
+        System.out.println("User canceled selection.");
+    }
+}
+
+private void handleSuccessfulImport(File file) {
+    // Confirmation alert to user
+    JOptionPane.showMessageDialog(this,
+            "Successfully imported: " + file.getName(),
+            "Import Success",
+            JOptionPane.INFORMATION_MESSAGE);
+
+    // Permanently disable the button to prevent future clicks
+    importButton.setEnabled(false);
+    importButton.setText("File Already Imported");
 }

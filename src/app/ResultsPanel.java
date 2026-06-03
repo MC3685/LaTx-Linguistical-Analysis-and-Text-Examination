@@ -37,7 +37,7 @@ public class ResultsPanel extends JPanel {
 
         JLabel title = new JLabel("ANALYSIS RESULTS");
 
-        title.setFont(new Font("Architype", Font.BOLD, 34));
+        title.setFont(HKModular.deriveFont(34f));
 
         title.setForeground(Theme.TEXT);
 

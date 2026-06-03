@@ -14,7 +14,7 @@ public class NavigationPanel extends JPanel {
 
     public NavigationPanel(MainFrame frame) {
 
-        setPreferredSize(new Dimension(250,0));
+        setPreferredSize(new Dimension(170,0));
 
         setBackground(Theme.SIDEBAR);
 
