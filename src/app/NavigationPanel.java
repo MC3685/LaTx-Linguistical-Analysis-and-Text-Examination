@@ -14,7 +14,7 @@ public class NavigationPanel extends JPanel {
 
     public NavigationPanel(MainFrame frame) {
 
-        setPreferredSize(new Dimension(170,0));
+        setPreferredSize(new Dimension(250,0));
 
         setBackground(Theme.SIDEBAR);
 
@@ -26,7 +26,7 @@ public class NavigationPanel extends JPanel {
 
         add(Box.createVerticalStrut(40));
 
-        add(navButton("-- REPORTS", e -> frame.showResults()));
+        add(navButton("$ REPORTS", e -> frame.showResults()));
 
         add(Box.createVerticalStrut(40));
 
@@ -39,7 +39,7 @@ public class NavigationPanel extends JPanel {
 
         add(Box.createVerticalStrut(40));
 
-        add(navButton("% RATE US", e ->
+        add(navButton("! RATE US", e ->
                 openWebsite()));
     }
 
@@ -49,6 +49,7 @@ public class NavigationPanel extends JPanel {
 
         button.setFont(HKModular.deriveFont(15f));
         button.setFocusPainted(false);
+        button.setHorizontalAlignment(SwingConstants.LEFT);
 
         button.setBorderPainted(false);
 
