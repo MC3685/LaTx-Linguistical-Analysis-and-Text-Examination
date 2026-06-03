@@ -12,6 +12,9 @@ public class NavigationPanel extends JPanel {
     private static final Font HKModular =
             FontLoader.load("HKModular-Bold.otf", 1f);
 
+    private static final Font Architype =
+            FontLoader.load("Architype-Aubette.ttf", 1f);
+
     public NavigationPanel(MainFrame frame) {
 
         setPreferredSize(new Dimension(250,0));
@@ -69,15 +72,15 @@ public class NavigationPanel extends JPanel {
 
     private void showHelp(MainFrame frame) {
 
-        JDialog instructionsWindow = new JDialog(frame, "Instructions", true);
-        instructionsWindow.setSize(350, 300);
+        JDialog instructionsWindow = new JDialog(frame, false);
+        instructionsWindow.setSize(500, 500);
         instructionsWindow.setLocationRelativeTo(null);
         instructionsWindow.setLayout(new BorderLayout());
         ((JComponent) instructionsWindow.getContentPane()).setBorder(
-                BorderFactory.createLineBorder(new Color(244,234,251), 5)); //change color
+                BorderFactory.createLineBorder(Theme.CARD, 5)); //change color - done
 
 
-        JTextArea instructionsArea = new JTextArea(
+        JTextArea instructionsArea = new JTextArea( // change intructions
                 " Instructions:\n\n" +
                         " 1. Select a shape\n" +
                         " 2. Enter dimensions\n" +
@@ -99,37 +102,19 @@ public class NavigationPanel extends JPanel {
         instructionsArea.setFocusable(false);
         instructionsArea.setLineWrap(true);
         instructionsArea.setWrapStyleWord(true);
-        instructionsArea.setBackground(new Color(244,234,251)); //change color
-        instructionsArea.setFont(new Font("Segoe UI", Font.PLAIN, 14)); //change font
+        instructionsArea.setBackground(Theme.BACKGROUND); //change color - done
+        instructionsArea.setForeground(Theme.TEXT);
+        instructionsArea.setFont(new Font(Font.MONOSPACED, Font.BOLD, 16)); //change font - done
 
-        // Back button
-        JButton back = new JButton("Back");
-        back.setFont(new Font("Segoe UI", Font.BOLD, 16)); //change font
-        back.setBackground(new Color(177,149,192)); //change color
-        back.setForeground(new Color(255, 255, 255)); //change color
-        back.setBorder(BorderFactory.createLineBorder(new Color(137, 101, 157), 2)); //change color
-        back.addActionListener(e -> instructionsWindow.dispose()); // closes popup
+
 
         // Add to layout
         instructionsWindow.add(new JScrollPane(instructionsArea), BorderLayout.CENTER);
-        instructionsWindow.add(back, BorderLayout.SOUTH);
 
         // Center popup
         instructionsWindow.setLocationRelativeTo(this);
         instructionsWindow.setVisible(true);
-        /*JOptionPane.showMessageDialog(
-                this,
-                """
-                Linguistic Analysis Tool
 
-                1. Import two text files
-                2. Enter optional titles
-                3. Run analysis
-                4. Review similarity metrics
-
-                Designed for stylometric analysis.
-                """
-        );*/
     }
 
     private void openWebsite() {

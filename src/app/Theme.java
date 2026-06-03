@@ -35,6 +35,8 @@ public class Theme {
 
         TEXT = new Color(240,240,245);
         SUBTEXT = new Color(150,160,190);
+
+
     }
 
     public static void setLightTheme() {
@@ -49,4 +51,6 @@ public class Theme {
         TEXT = new Color(20,20,25);
         SUBTEXT = new Color(90,90,100);
     }
+
+
 }
