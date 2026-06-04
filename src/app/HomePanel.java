@@ -258,7 +258,7 @@ public class HomePanel extends JPanel {
             handleSuccessfulImport(chosenFile, targetButton);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this,
-                    "Failed to read file: " + ex.getMessage(),
+                    "Failed to read file: ",
                     "Import Error",
                     JOptionPane.ERROR_MESSAGE);
         }
@@ -275,3 +275,4 @@ public class HomePanel extends JPanel {
         targetButton.setEnabled(false);
     }
 }
+
