@@ -75,7 +75,8 @@ public class SettingsPanel extends JPanel {
 
         subtitle = new JLabel("SETTINGS", SwingConstants.CENTER);
         subtitle.setForeground(Theme.TEXT);
-        subtitle.setFont(new Font(Font.MONOSPACED, Font.ITALIC, 18));
+        subtitle.setFont(HKModular.deriveFont(18f));
+
         add(subtitle);
 
         settingsCard = new JPanel(null);
@@ -142,7 +143,7 @@ public class SettingsPanel extends JPanel {
         exitButton.setBorderPainted(false);
 
 
-        exitButton.addActionListener(e -> { System.exit(0);});
+        exitButton.addActionListener(e -> System.exit(0));
 
         settingsCard.add(exitButton);
 

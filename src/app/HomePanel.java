@@ -101,7 +101,7 @@ public class HomePanel extends JPanel {
                 SwingConstants.CENTER);
 
         subtitle.setForeground(Color.WHITE);
-        subtitle.setFont(new Font(Font.MONOSPACED, Font.ITALIC, 20));
+        subtitle.setFont(HKModular.deriveFont(20f));
 
         add(subtitle);
 

@@ -43,7 +43,7 @@ public class ResultsPanel extends JPanel {
 
     private void buildDashboard() {
 
-        title = new JLabel("ANALYSIS RESULTS");
+        title = new TitleGradient("ANALYSIS RESULTS");
 
         title.setFont(HKModular.deriveFont(34f));
 

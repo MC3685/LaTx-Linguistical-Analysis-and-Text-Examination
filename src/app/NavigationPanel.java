@@ -84,7 +84,7 @@ public class NavigationPanel extends JPanel {
         button.setFocusPainted(false);
         button.setHorizontalAlignment(SwingConstants.LEFT);
         button.setBorderPainted(false);
-        button.setMaximumSize(new Dimension(150,50));
+        button.setMaximumSize(new Dimension(200,50));
         button.setAlignmentX(CENTER_ALIGNMENT);
 
         button.setBackground(Theme.SIDEBAR);
@@ -108,22 +108,10 @@ public class NavigationPanel extends JPanel {
 
 
         instructionsArea = new JTextArea( // change intructions
-                " Instructions:\n\n" +
-                        " 1. Select a shape\n" +
-                        " 2. Enter dimensions\n" +
-                        "    - Cannot be decimals\n" +
-                        "    - Cannot be negative numbers\n" +
-                        "    - Cannot include letters\n" +
-                        "    - Cannot be longer than 6 digits\n" +
-                        " 3. Click Calculate\n" +
-                        "    - Dimensions cannot be empty\n\n" +
-                        " Dimensions needed for each shape:\n" +
-                        " - Cube: side\n" +
-                        " - Sphere: radius\n" +
-                        " - Cone: radius & height\n" +
-                        " - Cylinder: radius & height\n" +
-                        " - Prism: side & height\n" +
-                        " - Tetrahedron: side"
+                """
+                        Instructions:
+                        Idk we gotta replace this eventually
+                        """
         );
         instructionsArea.setEditable(false);
         instructionsArea.setFocusable(false);
@@ -131,7 +119,7 @@ public class NavigationPanel extends JPanel {
         instructionsArea.setWrapStyleWord(true);
         instructionsArea.setBackground(Theme.BACKGROUND); //change color - done
         instructionsArea.setForeground(Theme.TEXT);
-        instructionsArea.setFont(new Font(Font.MONOSPACED, Font.BOLD, 16)); //change font - done
+        instructionsArea.setFont(new Font(Font.SANS_SERIF,Font.PLAIN , 16)); //change font - done
 
 
 
@@ -139,7 +127,6 @@ public class NavigationPanel extends JPanel {
         instructionsWindow.add(new JScrollPane(instructionsArea), BorderLayout.CENTER);
 
         // Center popup
-        instructionsWindow.setLocationRelativeTo(this);
         instructionsWindow.setVisible(true);
 
     }
