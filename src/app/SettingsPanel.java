@@ -10,7 +10,7 @@ import java.awt.event.ComponentEvent;
 public class SettingsPanel extends JPanel {
 
 
-    private JLabel title;
+    private TitleGradient title;
     private JLabel subtitle;
 
     private JPanel settingsCard;
@@ -59,43 +59,38 @@ public class SettingsPanel extends JPanel {
 
         footer.setForeground(Theme.SUBTEXT);
 
+        subtitle.setForeground(Theme.TEXT);
+
         title.setForeground(Theme.PURPLE);
+
+        exitButton.setForeground(Theme.TEXT);
 
     }
 
     private void buildUI() {
 
-        title = new JLabel(
-                "LINGUISTIC ANALYSIS AND TEXT EXAMINATION",
-                SwingConstants.CENTER
-        );
-        title.setForeground(Theme.PURPLE);
+        title = new TitleGradient("LINGUISTIC ANALYSIS AND TEXT EXAMINATION");
         title.setFont(Architype.deriveFont(40f));
         add(title);
 
-        subtitle = new JLabel(
-                "SETTINGS",
-                SwingConstants.CENTER
-        );
-        subtitle.setForeground(Color.WHITE);
-        subtitle.setFont(new Font("Arial", Font.ITALIC, 18));
+        subtitle = new JLabel("SETTINGS", SwingConstants.CENTER);
+        subtitle.setForeground(Theme.TEXT);
+        subtitle.setFont(new Font(Font.MONOSPACED, Font.ITALIC, 18));
         add(subtitle);
 
         settingsCard = new JPanel(null);
         settingsCard.setBackground(Theme.CARD);
-        settingsCard.setBorder(
-                BorderFactory.createLineBorder(Theme.BORDER, 2)
-        );
+        settingsCard.setBorder(BorderFactory.createLineBorder(Theme.BORDER, 2));
         add(settingsCard);
 
         modeLabelLeft = new JLabel("DARK MODE");
         modeLabelLeft.setForeground(Theme.TEXT);
-        modeLabelLeft.setFont(HKModular.deriveFont(18f));
+        modeLabelLeft.setFont(HKModular.deriveFont(17f));
         settingsCard.add(modeLabelLeft);
 
         modeLabelRight = new JLabel("LIGHT MODE");
         modeLabelRight.setForeground(Theme.TEXT);
-        modeLabelRight.setFont(HKModular.deriveFont(18f));
+        modeLabelRight.setFont(HKModular.deriveFont(17f));
         settingsCard.add(modeLabelRight);
 
 
@@ -103,34 +98,20 @@ public class SettingsPanel extends JPanel {
             @Override
         protected void paintComponent(Graphics g) {
 
-            Graphics2D g2 =
-                    (Graphics2D) g.create();
+            Graphics2D g2 = (Graphics2D) g.create();
 
-            GradientPaint paint =
-                    new GradientPaint(
-                            0,
-                            0,
-                            Theme.PURPLE,
-                            getWidth(),
-                            0,
-                            Theme.BLUE);
+            GradientPaint paint = new GradientPaint(0, 0, Theme.PURPLE, getWidth(), 0, Theme.BLUE);
 
             g2.setPaint(paint);
 
-            g2.fillRoundRect(
-                    0,
-                    0,
-                    getWidth(),
-                    getHeight(),
-                    20,
-                    20);
+            g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
 
             super.paintComponent(g);
 
             g2.dispose();
         }};
         //themeToggle.setFocusPainted(false);
-        //themeToggle.setBorderPainted(false);
+        themeToggle.setBorderPainted(false);
         themeToggle.setFont(Architype.deriveFont(10f));
         themeToggle.setBackground(Theme.BACKGROUND);
 
@@ -142,10 +123,10 @@ public class SettingsPanel extends JPanel {
                 Theme.setLightTheme();
                 themeToggle.setText("Light");
 
-            } else {
+            } else
+            {
                 Theme.setDarkTheme();
                 themeToggle.setText("Dark");
-
 
             }
 
@@ -156,20 +137,16 @@ public class SettingsPanel extends JPanel {
 
         exitButton = new GradientButton("EXIT");
         exitButton.setFocusPainted(false);
-        exitButton.setForeground(Color.WHITE);
+        exitButton.setForeground(Theme.TEXT);
         exitButton.setFont(HKModular.deriveFont(28f));
         exitButton.setBorderPainted(false);
 
-        exitButton.setBackground(new Color(240,240,240));
 
         exitButton.addActionListener(e -> { System.exit(0);});
 
         settingsCard.add(exitButton);
 
-        footer = new JLabel(
-                "CLICK TO EXIT THE APPLICATION  •  RATE US WHEN YOU GO!",
-                SwingConstants.CENTER
-        );
+        footer = new JLabel("CLICK TO EXIT THE APPLICATION  •  RATE US WHEN YOU GO!", SwingConstants.CENTER);
         footer.setForeground(Theme.SUBTEXT);
         footer.setFont(new Font("Arial", Font.PLAIN, 12));
         add(footer);
@@ -198,25 +175,12 @@ public class SettingsPanel extends JPanel {
         modeLabelLeft.setBounds(pad, 40, 150, 30);
         modeLabelRight.setBounds(cardW - 160, 40, 150, 30);
 
-        themeToggle.setBounds(
-                cardW / 2 - 35,
-                40,
-                70,
-                30
-        );
+        exitButton.setBounds(cardW / 2 - 150, 110, 300, 60);
 
-        exitButton.setBounds(
-                cardW / 2 - 150,
-                110,
-                300,
-                60
-        );
+        themeToggle.setBounds(cardW / 2 - 50, 40, 100, 30);
 
-        footer.setBounds(
-                0,
-                cardY + cardH + 20,
-                w,
-                30
-        );
+        exitButton.setBounds(cardW / 2 - 150, 130, 300, 60); //centers the button so it doesn't look awkward
+
+        footer.setBounds(0, cardY + cardH + 20, w, 30);
     }
 }
