@@ -50,8 +50,11 @@ public class NavigationPanel extends JPanel {
 
         add(Box.createVerticalStrut(40));
 
-        add(navButton("! RATE US", e ->
-                openWebsite()));
+        add(navButton("! SOURCE", e -> openWebsite()));
+
+        add(Box.createVerticalStrut(40));
+
+        add(navButton("... EXIT", e -> System.exit(0)));
     }
 
     public void applyTheme()

@@ -6,9 +6,11 @@ import analysis.AnalysisResult;
 import components.*;
 
 import javax.swing.*;
+import javax.swing.border.AbstractBorder;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.geom.RoundRectangle2D;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.nio.file.Files;
@@ -16,7 +18,6 @@ import java.nio.file.Files;
 public class HomePanel extends JPanel {
 
     private JPanel panel;
-
     private JTextArea area;
 
     private JTextArea textA;
@@ -32,6 +33,7 @@ public class HomePanel extends JPanel {
 
     private JPanel cardA;
     private JPanel cardB;
+
     JLabel LabelA = new JLabel("No file selected");
     JLabel LabelB = new JLabel("No file selected");
 
@@ -49,16 +51,12 @@ public class HomePanel extends JPanel {
             FontLoader.load("Architype-Aubette.ttf", 1f);
 
     public HomePanel(MainFrame frame) {
-
         this.frame = frame;
-
         setBackground(Theme.BACKGROUND);
         setLayout(null);
-
         buildUI();
 
         addComponentListener(new ComponentAdapter() {
-
             @Override
             public void componentResized(ComponentEvent e) {
                 updateLayout();
@@ -68,144 +66,193 @@ public class HomePanel extends JPanel {
         SwingUtilities.invokeLater(this::updateLayout);
     }
 
-    public void applyTheme()
-    {
+    // ─────────────────────────────────────────────
+    // THEME APPLICATION
+    // ─────────────────────────────────────────────
+
+    public void applyTheme() {
+
         setBackground(Theme.BACKGROUND);
-        subtitle.setForeground(Color.BLACK);
-        textA.setBackground(Theme.CARD);
-        textA.setForeground(Theme.TEXT);
-        textA.setCaretColor(Theme.TEXT);
 
-        textB.setBackground(Theme.CARD);
-        textB.setForeground(Theme.TEXT);
-        textB.setCaretColor(Theme.TEXT);
+        subtitle.setForeground(Theme.SUBTITLE);
 
-        cardA.setBackground(Theme.CARD);
-        cardB.setBackground(Theme.CARD);
+        textA.setBackground(new Color(0, 0, 0, 0));
+        textA.setForeground(Theme.TEXT_AREA_TEXT);
+        textA.setCaretColor(Theme.TEXT_AREA_CARET);
+        textA.setSelectionColor(Theme.TEXT_AREA_SELECTION);
 
+        textB.setBackground(new Color(0, 0, 0, 0));
+        textB.setForeground(Theme.TEXT_AREA_TEXT);
+        textB.setCaretColor(Theme.TEXT_AREA_CARET);
+        textB.setSelectionColor(Theme.TEXT_AREA_SELECTION);
+
+        repaint();
     }
 
+    // ─────────────────────────────────────────────
+    // BACKGROUND RENDERING
+    // ─────────────────────────────────────────────
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        Graphics2D g2 = (Graphics2D) g.create();
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        int w = getWidth(), h = getHeight();
+
+        GradientPaint base = new GradientPaint(
+                0, 0, Theme.BACKGROUND_GRADIENT_TOP,
+                w, h, Theme.BACKGROUND_GRADIENT_BOTTOM
+        );
+
+        g2.setPaint(base);
+        g2.fillRect(0, 0, w, h);
+
+        paintOrb(g2, (int)(w * 0.15), (int)(h * 0.18), (int)(w * 0.55), Theme.ORB_PURPLE);
+        paintOrb(g2, (int)(w * 0.75), (int)(h * 0.70), (int)(w * 0.50), Theme.ORB_CYAN);
+        paintOrb(g2, (int)(w * 0.50), (int)(h * 0.40), (int)(w * 0.35), Theme.ORB_MAGENTA);
+
+        g2.setColor(Theme.DIVIDER);
+        g2.setStroke(new BasicStroke(1f));
+        g2.drawLine(40, 140, w - 40, 140);
+
+        g2.dispose();
+    }
+
+    private void paintOrb(Graphics2D g2, int cx, int cy, int radius, Color color) {
+        RadialGradientPaint orb = new RadialGradientPaint(
+                new Point(cx, cy),
+                radius,
+                new float[]{0f, 1f},
+                new Color[]{color, new Color(0, 0, 0, 0)}
+        );
+
+        g2.setPaint(orb);
+        g2.fillOval(cx - radius, cy - radius, radius * 2, radius * 2);
+    }
+
+    // ─────────────────────────────────────────────
+    // UI BUILD
+    // ─────────────────────────────────────────────
 
     private void buildUI() {
 
-        title = new TitleGradient(
-                "LINGUISTIC ANALYSIS AND TEXT EXAMINATION");
-
-        title.setForeground(Theme.PURPLE);
-        title.setFont(Architype.deriveFont(40f));
-
+        title = new TitleGradient("LINGUISTIC ANALYSIS AND TEXT EXAMINATION");
+        title.setForeground(Theme.TITLE);
+        title.setFont(Architype.deriveFont(60f));
         add(title);
 
-        subtitle = new JLabel(
-                "DISCOVER THE AUTHOR BEHIND THE WORDS",
-                SwingConstants.CENTER);
-
-        subtitle.setForeground(Color.WHITE);
-        subtitle.setFont(HKModular.deriveFont(20f));
-
+        subtitle = new JLabel("DISCOVER THE AUTHOR BEHIND THE WORDS", SwingConstants.CENTER);
+        subtitle.setForeground(Theme.SUBTITLE);
+        subtitle.setFont(HKModular.deriveFont(15f));
         add(subtitle);
 
-        cardA = createTextCard("TEXT A");
-        cardB = createTextCard("TEXT B");
-
+        cardA = createTextCard("TEXT  A");
+        cardB = createTextCard("TEXT  B");
         add(cardA);
         add(cardB);
 
         textA = createTextArea();
         textB = createTextArea();
 
-        scrollA = new JScrollPane(textA);
-        scrollB = new JScrollPane(textB);
+        scrollA = createStyledScroll(textA);
+        scrollB = createStyledScroll(textB);
 
         cardA.add(scrollA);
         cardB.add(scrollB);
 
-        // Pass the respective button and text area targets to the unified file picker
-        importA = new JButton("ADD FILE");
-        importA.addActionListener(e -> FilePicker(frame, importA, textA));
+        importA = createImportButton("ADD FILE");
+        importB = createImportButton("ADD FILE");
 
-        importB = new JButton("ADD FILE");
+        importA.addActionListener(e -> FilePicker(frame, importA, textA));
         importB.addActionListener(e -> FilePicker(frame, importB, textB));
 
         cardA.add(importA);
         cardB.add(importB);
 
-
-        analyzeButton = new GradientButton("RUN ANALYSIS");
-        analyzeButton.setFont(HKModular.deriveFont(20f));
-
+        analyzeButton = createAnalyzeButton("RUN ANALYSIS");
+        analyzeButton.setFont(HKModular.deriveFont(16f));
         analyzeButton.addActionListener(e -> {
-
-            AnalysisEngine engine =
-                    new AnalysisEngine();
-
+            AnalysisEngine engine = new AnalysisEngine();
             AnalysisResult result = engine.analyze(textA.getText(), textB.getText());
-
             frame.getResultsPanel().updateResults(result);
-
             frame.showResults();
         });
 
         add(analyzeButton);
     }
 
+    // ─────────────────────────────────────────────
+    // LAYOUT
+    // ─────────────────────────────────────────────
+
     private void updateLayout() {
 
-        int w = getWidth();
-        int h = getHeight();
+        int w = getWidth(), h = getHeight();
+        int topMargin = 42;
 
-        int topMargin = 40;
+        title.setBounds(0, topMargin, w, 52);
+        subtitle.setBounds(0, topMargin + 58, w, 24);
 
-        title.setBounds(0, topMargin, w, 50);
-
-        subtitle.setBounds(0, topMargin + 55, w, 30);
-
-        int gap = Math.max(20, w / 50);
-
-        int cardWidth = Math.min(500, (w - 300 - gap) / 2);
-
-        int cardHeight = Math.max(350, h - 340);
-
-        int cardY = 160;
+        int gap = Math.max(24, w / 45);
+        int cardWidth = Math.min(500, (w - 280 - gap) / 2);
+        int cardHeight = Math.max(360, h - 320);
+        int cardY = 158;
 
         int totalWidth = cardWidth * 2 + gap;
-
         int startX = (w - totalWidth) / 2;
 
         cardA.setBounds(startX, cardY, cardWidth, cardHeight);
-
         cardB.setBounds(startX + cardWidth + gap, cardY, cardWidth, cardHeight);
 
-        int scrollMargin = 25;
+        int sm = 22;
 
-        scrollA.setBounds(scrollMargin, 30, cardWidth - 50, cardHeight - 170);
+        scrollA.setBounds(sm, 42, cardWidth - 44, cardHeight - 130);
+        scrollB.setBounds(sm, 42, cardWidth - 44, cardHeight - 130);
 
-        scrollB.setBounds(scrollMargin, 30, cardWidth - 50, cardHeight - 170);
+        importA.setBounds(cardWidth / 2 - 110, cardHeight - 75, 220, 42);
+        importB.setBounds(cardWidth / 2 - 110, cardHeight - 75, 220, 42);
 
-        importA.setBounds(cardWidth / 2 - 125, cardHeight - 110, 250, 45);
-
-        importB.setBounds(cardWidth / 2 - 125, cardHeight - 110, 250, 45);
-
-
-        analyzeButton.setBounds(w / 2 - 150, h - 80, 300, 50);
+        analyzeButton.setBounds(w / 2 - 160, h - 76, 320, 50);
     }
+
+    // ─────────────────────────────────────────────
+    // COMPONENTS
+    // ─────────────────────────────────────────────
 
     private JPanel createTextCard(String label) {
 
-        panel = new JPanel(null);
+        panel = new JPanel(null) {
 
-        panel.setBackground(Theme.CARD);
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        panel.setBorder(BorderFactory.createLineBorder(Theme.BORDER, 2));
+                g2.setColor(Theme.GLASS_CARD);
+                g2.fill(new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), 20, 20));
 
-        lbl = new JLabel(label);
+                GradientPaint shine = new GradientPaint(
+                        0, 0, Theme.GLASS_HIGHLIGHT,
+                        0, getHeight() / 3f, new Color(0, 0, 0, 0)
+                );
 
-        lbl.setForeground(Theme.SUBTEXT);
+                g2.setPaint(shine);
+                g2.fill(new RoundRectangle2D.Float(0, 0, getWidth(), getHeight() / 3f, 20, 20));
 
-        lbl.setHorizontalAlignment(
-                SwingConstants.CENTER);
+                g2.dispose();
+            }
+        };
 
-        lbl.setBounds(0, 0, 200, 25);
+        panel.setOpaque(false);
+        panel.setBorder(new RoundedGlowBorder(20, Theme.ACCENT_PURPLE_SOFT, Theme.ACCENT_BLUE_SOFT));
+
+        lbl = new JLabel("<html><body style='letter-spacing:3px'>" + label + "</body></html>", SwingConstants.CENTER);
+        lbl.setForeground(Theme.CARD_LABEL);
+        lbl.setFont(HKModular != null ? HKModular.deriveFont(11f) : new Font("SansSerif", Font.BOLD, 11));
+        lbl.setBounds(0, 12, 200, 20);
 
         panel.add(lbl);
 
@@ -215,52 +262,194 @@ public class HomePanel extends JPanel {
     private JTextArea createTextArea() {
 
         area = new JTextArea();
-
-        area.setBackground(Theme.BACKGROUND);
-
-        area.setForeground(Theme.TEXT);
-
-        area.setCaretColor(Theme.TEXT);
-
-
+        area.setBackground(new Color(0, 0, 0, 0));
+        area.setForeground(Theme.TEXT_AREA_TEXT);
+        area.setCaretColor(Theme.TEXT_AREA_CARET);
+        area.setSelectionColor(Theme.TEXT_AREA_SELECTION);
+        area.setFont(new Font("Monospaced", Font.PLAIN, 13));
         area.setLineWrap(true);
         area.setWrapStyleWord(true);
+        area.setOpaque(false);
 
         return area;
     }
 
-    /**
-     * Reusable File Dialog targeting specific buttons and text areas.
-     */
+    private JScrollPane createStyledScroll(JTextArea ta) {
+
+        JScrollPane sp = new JScrollPane(ta);
+        sp.setOpaque(false);
+        sp.getViewport().setOpaque(false);
+        sp.setBorder(BorderFactory.createEmptyBorder());
+
+        sp.getVerticalScrollBar().setOpaque(false);
+        sp.getVerticalScrollBar().setPreferredSize(new Dimension(6, 0));
+        sp.getVerticalScrollBar().setUI(new ThinScrollBarUI(Theme.SCROLLBAR_THUMB));
+
+        return sp;
+    }
+
+    // ─────────────────────────────────────────────
+    // BUTTONS
+    // ─────────────────────────────────────────────
+
+    private JButton createImportButton(String text) {
+
+        JButton btn = new JButton(text) {
+
+            @Override
+            protected void paintComponent(Graphics g) {
+
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+                boolean hover = getModel().isRollover();
+                boolean pressed = getModel().isPressed();
+
+                RoundRectangle2D.Float rr =
+                        new RoundRectangle2D.Float(1, 1, getWidth() - 2, getHeight() - 2, 30, 30);
+
+                if (pressed) {
+                    g2.setColor(Theme.BUTTON_IMPORT_PRESSED);
+                    g2.fill(rr);
+                } else if (hover) {
+                    GradientPaint gp = new GradientPaint(
+                            0, 0, Theme.BUTTON_IMPORT_GRADIENT_START,
+                            getWidth(), getHeight(), Theme.BUTTON_IMPORT_GRADIENT_END
+                    );
+                    g2.setPaint(gp);
+                    g2.fill(rr);
+                } else {
+                    g2.setColor(Theme.BUTTON_IMPORT_IDLE);
+                    g2.fill(rr);
+                }
+
+                g2.setStroke(new BasicStroke(1.2f));
+
+                GradientPaint border = new GradientPaint(
+                        0, 0, Theme.BUTTON_IMPORT_BORDER_START,
+                        getWidth(), getHeight(), Theme.BUTTON_IMPORT_BORDER_END
+                );
+
+                g2.setPaint(border);
+                g2.draw(rr);
+
+                g2.setColor(hover ? Theme.BUTTON_TEXT : Theme.CARD_LABEL);
+
+                FontMetrics fm = g2.getFontMetrics();
+                int tx = (getWidth() - fm.stringWidth(getText())) / 2;
+                int ty = (getHeight() + fm.getAscent() - fm.getDescent()) / 2;
+
+                g2.drawString(getText(), tx, ty);
+
+                g2.dispose();
+            }
+        };
+
+        btn.setFont(HKModular.deriveFont(12f));
+        btn.setOpaque(false);
+        btn.setContentAreaFilled(false);
+        btn.setBorderPainted(false);
+        btn.setFocusPainted(false);
+        btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+        return btn;
+    }
+
+    private JButton createAnalyzeButton(String text) {
+
+        JButton btn = new JButton(text) {
+
+            @Override
+            protected void paintComponent(Graphics g) {
+
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+                boolean hover = getModel().isRollover();
+                boolean pressed = getModel().isPressed();
+
+                RoundRectangle2D.Float rr =
+                        new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), 50, 50);
+
+                GradientPaint gp;
+
+                if (pressed) {
+                    gp = new GradientPaint(
+                            0, 0, Theme.BUTTON_ANALYZE_PRESSED_START,
+                            getWidth(), getHeight(), Theme.BUTTON_ANALYZE_PRESSED_END
+                    );
+                } else if (hover) {
+                    gp = new GradientPaint(
+                            0, 0, Theme.BUTTON_ANALYZE_HOVER_START,
+                            getWidth(), getHeight(), Theme.BUTTON_ANALYZE_HOVER_END
+                    );
+                } else {
+                    gp = new GradientPaint(
+                            0, 0, Theme.BUTTON_ANALYZE_START,
+                            getWidth(), getHeight(), Theme.BUTTON_ANALYZE_END
+                    );
+                }
+
+                g2.setPaint(gp);
+                g2.fill(rr);
+
+                GradientPaint shine = new GradientPaint(
+                        0, 0,
+                        new Color(255, 255, 255, hover ? 40 : 25),
+                        0, getHeight() / 2f,
+                        new Color(255, 255, 255, 0)
+                );
+
+                g2.setPaint(shine);
+                g2.fill(rr);
+
+                if (hover) {
+                    g2.setStroke(new BasicStroke(2f));
+                    g2.setColor(Theme.BUTTON_ANALYZE_GLOW);
+                    g2.draw(new RoundRectangle2D.Float(-2, -2, getWidth() + 4, getHeight() + 4, 54, 54));
+                }
+
+                g2.setColor(Color.WHITE);
+
+                FontMetrics fm = g2.getFontMetrics();
+                int tx = (getWidth() - fm.stringWidth(getText())) / 2;
+                int ty = (getHeight() + fm.getAscent() - fm.getDescent()) / 2;
+
+                g2.drawString(getText(), tx, ty);
+
+                g2.dispose();
+            }
+        };
+
+        btn.setOpaque(false);
+        btn.setContentAreaFilled(false);
+        btn.setBorderPainted(false);
+        btn.setFocusPainted(false);
+        btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+        return btn;
+    }
+
+    // ─────────────────────────────────────────────
+    // FILE HANDLING (UNCHANGED)
+    // ─────────────────────────────────────────────
+
     public void FilePicker(MainFrame parent, JButton targetButton, JTextArea targetTextArea) {
         FileDialog fileDialog = new FileDialog(parent, "Open Text File", FileDialog.LOAD);
-
-        // Only accept .txt files
-        fileDialog.setFilenameFilter(new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String name) {
-                return name.toLowerCase().endsWith(".txt");
-            }
-        });
-
+        fileDialog.setFilenameFilter((dir, name) -> name.toLowerCase().endsWith(".txt"));
         fileDialog.setVisible(true);
 
         String filename = fileDialog.getFile();
         String directory = fileDialog.getDirectory();
         fileDialog.dispose();
 
-        // Check if user cancelled selection
-        if (filename == null) {
-            return;
-        }
+        if (filename == null) return;
 
         File chosenFile = new File(directory, filename);
 
-        // Read file contents into target JTextArea and update the target button
         try {
             String content = Files.readString(chosenFile.toPath());
             targetTextArea.setText(content);
-
             handleSuccessfulImport(chosenFile, targetButton);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this,
@@ -276,9 +465,79 @@ public class HomePanel extends JPanel {
                 "Import Success",
                 JOptionPane.INFORMATION_MESSAGE);
 
-        // Update button parameters as requested
         targetButton.setText(file.getName());
         targetButton.setEnabled(false);
     }
-}
 
+    // ─────────────────────────────────────────────
+    // INNER CLASSES (UNCHANGED STRUCTURALLY)
+    // ─────────────────────────────────────────────
+
+    private static class RoundedGlowBorder extends AbstractBorder {
+
+        private final int radius;
+        private final Color inner, outer;
+
+        RoundedGlowBorder(int radius, Color inner, Color outer) {
+            this.radius = radius;
+            this.inner = inner;
+            this.outer = outer;
+        }
+
+        @Override
+        public void paintBorder(Component c, Graphics g, int x, int y, int w, int h) {
+
+            Graphics2D g2 = (Graphics2D) g.create();
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+            g2.setStroke(new BasicStroke(3f));
+            g2.setColor(outer);
+            g2.draw(new RoundRectangle2D.Float(x + 1, y + 1, w - 2, h - 2, radius + 2, radius + 2));
+
+            g2.setStroke(new BasicStroke(1.2f));
+            g2.setColor(inner);
+            g2.draw(new RoundRectangle2D.Float(x + 2, y + 2, w - 4, h - 4, radius, radius));
+
+            g2.dispose();
+        }
+
+        @Override
+        public Insets getBorderInsets(Component c) {
+            return new Insets(radius / 2, radius / 2, radius / 2, radius / 2);
+        }
+    }
+
+    private static class ThinScrollBarUI extends javax.swing.plaf.basic.BasicScrollBarUI {
+
+        private final Color thumbColor;
+
+        ThinScrollBarUI(Color thumbColor) {
+            this.thumbColor = thumbColor;
+        }
+
+        @Override
+        protected void paintTrack(Graphics g, JComponent c, Rectangle r) {}
+
+        @Override
+        protected void paintThumb(Graphics g, JComponent c, Rectangle r) {
+
+            Graphics2D g2 = (Graphics2D) g.create();
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+            g2.setColor(thumbColor);
+            g2.fill(new RoundRectangle2D.Float(r.x + 1, r.y, r.width - 2, r.height, 4, 4));
+
+            g2.dispose();
+        }
+
+        @Override
+        protected JButton createDecreaseButton(int o) {
+            return new JButton() {{ setPreferredSize(new Dimension(0, 0)); }};
+        }
+
+        @Override
+        protected JButton createIncreaseButton(int o) {
+            return new JButton() {{ setPreferredSize(new Dimension(0, 0)); }};
+        }
+    }
+}

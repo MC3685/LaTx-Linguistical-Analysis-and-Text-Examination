@@ -27,9 +27,7 @@ public class TitleGradient extends JLabel {
         int y = (getHeight() + fm.getAscent()) / 2 - 4;
 
         GradientPaint gradient =
-                new GradientPaint(
-                        0, 0, Theme.PURPLE,
-                        getWidth(), 0, Theme.BLUE);
+                new GradientPaint(0, 0, Theme.PURPLE, getWidth(), 0, Theme.BLUE);
 
         g2.setPaint(gradient);
         g2.setFont(getFont());
