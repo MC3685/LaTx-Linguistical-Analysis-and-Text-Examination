@@ -1,5 +1,6 @@
 package app;
 
+import components.TitleGradient;
 import analysis.AnalysisEngine;
 import analysis.AnalysisResult;
 import components.*;
@@ -29,9 +30,10 @@ public class HomePanel extends JPanel {
     private JPanel cardA;
     private JPanel cardB;
 
-    private JLabel title;
     private JLabel subtitle;
     private JLabel lbl;
+
+    private TitleGradient title;
 
     private final MainFrame frame;
 
@@ -65,20 +67,24 @@ public class HomePanel extends JPanel {
     {
         setBackground(Theme.BACKGROUND);
         subtitle.setForeground(Color.BLACK);
-        area.setCaretColor(Theme.TEXT);
-        area.setForeground(Theme.TEXT);
-        area.setBackground(Theme.BACKGROUND);
-        lbl.setForeground(Theme.SUBTEXT);
-        panel.setBackground(Theme.CARD);
+        textA.setBackground(Theme.CARD);
+        textA.setForeground(Theme.TEXT);
+        textA.setCaretColor(Theme.TEXT);
+
+        textB.setBackground(Theme.CARD);
+        textB.setForeground(Theme.TEXT);
+        textB.setCaretColor(Theme.TEXT);
+
+        cardA.setBackground(Theme.CARD);
+        cardB.setBackground(Theme.CARD);
 
     }
 
 
     private void buildUI() {
 
-        title = new JLabel(
-                "LINGUISTIC ANALYSIS AND TEXT EXAMINATION",
-                SwingConstants.CENTER);
+        title = new TitleGradient(
+                "LINGUISTIC ANALYSIS AND TEXT EXAMINATION");
 
         title.setForeground(Theme.PURPLE);
         title.setFont(Architype.deriveFont(40f));
@@ -90,7 +96,7 @@ public class HomePanel extends JPanel {
                 SwingConstants.CENTER);
 
         subtitle.setForeground(Color.WHITE);
-        subtitle.setFont(new Font("Arial", Font.ITALIC, 20));
+        subtitle.setFont(new Font(Font.MONOSPACED, Font.ITALIC, 20));
 
         add(subtitle);
 
