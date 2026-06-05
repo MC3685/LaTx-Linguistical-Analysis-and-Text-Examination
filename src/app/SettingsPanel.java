@@ -75,7 +75,7 @@ public class SettingsPanel extends JPanel {
         BackgroundPainter.paintBackground(g, this);
     }
 
-    private static class RoundedGlowBorder extends AbstractBorder {
+    public static class RoundedGlowBorder extends AbstractBorder {
 
         private final int radius;
         private final Color inner, outer;

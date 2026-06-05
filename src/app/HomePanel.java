@@ -447,7 +447,7 @@ public class HomePanel extends JPanel {
         }
     }
 
-    private static class ThinScrollBarUI extends javax.swing.plaf.basic.BasicScrollBarUI {
+    public static class ThinScrollBarUI extends javax.swing.plaf.basic.BasicScrollBarUI {
 
         private final Color thumbColor;
 
