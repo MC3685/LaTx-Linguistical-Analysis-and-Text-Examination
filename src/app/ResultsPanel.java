@@ -1,7 +1,8 @@
 package app;
 
-import analysis.AnalysisResult;
 import components.*;
+import analysis.AnalysisResult;
+
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,193 +12,124 @@ public class ResultsPanel extends JPanel {
     private static final Font HKModular =
             FontLoader.load("HKModular-Bold.otf", 1f);
 
-    // ===== UI ROOT =====
-    private final JPanel contentPanel;
+    private static final Font Architype =
+            FontLoader.load("Architype-Aubette.ttf", 1f);
 
-    // ===== Dynamic components =====
     private CircularScorePanel scorePanel;
     private JLabel title;
 
-    private JLabel conclusionLabel;
-
-    private JTable wordTable;
-
     public ResultsPanel() {
 
-        setLayout(new BorderLayout());
         setBackground(Theme.BACKGROUND);
 
-        // =========================
-        // Scrollable container
-        // =========================
-        contentPanel = new JPanel();
-        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
-        contentPanel.setBackground(Theme.BACKGROUND);
 
-        JScrollPane scrollPane = new JScrollPane(contentPanel);
-        scrollPane.setBorder(null);
-        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
-        scrollPane.getViewport().setBackground(Theme.BACKGROUND);
+        setLayout(null);
 
-        add(scrollPane, BorderLayout.CENTER);
-
-        buildUI();
+        buildDashboard();
     }
 
-    // =========================================================
-    // PUBLIC API
-    // =========================================================
-
-    public void updateResults(AnalysisResult result) {
-
-        if (scorePanel != null) {
-            scorePanel.setScore(result.getSimilarity());
-        }
-
-        if (wordTable != null) {
-            updateWordTable(result);
-        }
-
-        if (conclusionLabel != null) {
-            conclusionLabel.setText(
-                    "Conclusion: " + result.getConclusion()
-            );
-        }
-
-        revalidate();
-        repaint();
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        BackgroundPainter.paintBackground(g, this);
     }
 
-    public void applyTheme() {
-
+    public void applyTheme()
+    {
         setBackground(Theme.BACKGROUND);
-        contentPanel.setBackground(Theme.BACKGROUND);
-
-        if (title != null) {
-            title.setForeground(Theme.TEXT);
-        }
-    }
-
-    // =========================================================
-    // UI BUILD
-    // =========================================================
-
-    private void buildUI() {
-
-        contentPanel.add(buildTitlePane());
-        contentPanel.add(buildScorePane());
-        contentPanel.add(buildMetricsPane());
-        contentPanel.add(buildChartPane());
-        contentPanel.add(buildWordPane());
-        contentPanel.add(buildConclusionPane());
-
-        contentPanel.add(Box.createVerticalGlue());
-    }
-
-    // =========================================================
-    // PANES
-    // =========================================================
-
-    private JComponent buildTitlePane() {
-
-        title = new TitleGradient("ANALYSIS RESULTS");
-        title.setFont(HKModular.deriveFont(34f));
         title.setForeground(Theme.TEXT);
 
-        return wrap(title);
     }
 
-    private JComponent buildScorePane() {
+    public void updateResults(
+            AnalysisResult result) {
 
-        GlassCard card = new GlassCard();
-        card.setLayout(new BorderLayout());
-
-        scorePanel = new CircularScorePanel();
-
-        card.add(scorePanel, BorderLayout.CENTER);
-
-        return wrap(card);
+        scorePanel.setScore(
+                result.getSimilarity());
     }
 
-    private JComponent buildMetricsPane() {
+    private void buildDashboard() {
 
-        GlassCard card = new GlassCard();
-        card.setLayout(new GridLayout(6, 1, 5, 5));
+        title = new TitleGradient("ANALYSIS RESULTS");
 
-        // placeholder values (can be replaced in updateResults later)
-        card.add(new MetricBar("Function Words", 0, Theme.PURPLE));
-        card.add(new MetricBar("Sentence Structure", 0, Theme.BLUE));
-        card.add(new MetricBar("Vocabulary", 0, Theme.BLUE));
-        card.add(new MetricBar("Punctuation", 0, Theme.SUCCESS));
-        card.add(new MetricBar("Rhythm", 0, Theme.SUCCESS));
-        card.add(new MetricBar("Common Phrases", 0, Color.YELLOW));
+        title.setFont(HKModular.deriveFont(34f));
 
-        return wrap(card);
-    }
+        title.setForeground(Theme.TEXT);
 
-    private JComponent buildChartPane() {
+        title.setBounds(40, 20, 600, 50);
 
-        GlassCard card = new GlassCard();
-        card.add(new JLabel("Sentence Length Distribution"));
+        add(title);
 
-        return wrap(card);
-    }
+        GlassCard chartCard = new GlassCard();
 
-    private JComponent buildWordPane() {
+        chartCard.setBounds(140, 130, 520, 260);
 
-        GlassCard card = new GlassCard();
+        chartCard.add(new JLabel("Sentence Length Distribution"));
 
-        wordTable = new JTable(
-                new Object[][]{
-                        {"-", "-", "-", "-"}
-                },
-                new Object[]{"Word", "Text A", "Text B", "Similarity"}
-        );
+        add(chartCard);
 
-        card.add(new JScrollPane(wordTable));
+        GlassCard metrics = new GlassCard();
 
-        return wrap(card);
-    }
+        metrics.setBounds(
+                700, 130, 400, 260);
 
-    private JComponent buildConclusionPane() {
+        metrics.setLayout(
+                new GridLayout(6, 1, 5, 5));
 
-        GlassCard card = new GlassCard();
+        metrics.add(
+                new MetricBar("Function Words", 93, Theme.PURPLE));
 
-        conclusionLabel = new JLabel("Conclusion: Awaiting analysis...");
-        conclusionLabel.setForeground(Theme.TEXT);
+        metrics.add(
+                new MetricBar("Sentence Structure", 85, Theme.BLUE));
 
-        card.add(conclusionLabel);
+        metrics.add(
+                new MetricBar("Vocabulary", 78, Theme.BLUE));
 
-        return wrap(card);
-    }
+        metrics.add(
+                new MetricBar("Punctuation", 90, Theme.SUCCESS));
 
-    // =========================================================
-    // UPDATE HELPERS
-    // =========================================================
+        metrics.add(
+                new MetricBar("Rhythm", 82, Theme.SUCCESS));
 
-    private void updateWordTable(AnalysisResult result) {
+        metrics.add(
+                new MetricBar("Common Phrases", 76, Color.YELLOW));
 
-        Object[][] data = result.getTopWords(); // assumed structure
+        add(metrics);
 
-        wordTable.setModel(new javax.swing.table.DefaultTableModel(
-                data,
-                new Object[]{"Word", "Text A", "Text B", "Similarity"}
-        ));
-    }
+        GlassCard score = new GlassCard();
 
-    // =========================================================
-    // UTIL
-    // =========================================================
+        score.setBounds(140, 420, 320, 300);
 
-    private JPanel wrap(JComponent comp) {
+        score.setLayout(new BorderLayout());
 
-        JPanel wrapper = new JPanel(new BorderLayout());
-        wrapper.setBackground(Theme.BACKGROUND);
 
-        wrapper.add(comp, BorderLayout.CENTER);
+        scorePanel =
+                new CircularScorePanel();
 
-        wrapper.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        score.add(scorePanel);
 
-        return wrapper;
+        add(score);
+
+        GlassCard words = new GlassCard();
+
+        words.setBounds(500, 420, 600, 300);
+
+        JTable table =
+                new JTable(
+                    new Object[][]{{"however",28,26,"96%"}, {"therefore",23,22,"95%"}, {"furthermore",19,18,"95%"}, {"significant",17,16,"94%"}},
+                        new Object[]{"Word","Text A", "Text B", "Similarity"});
+
+        words.add(new JScrollPane(table));
+
+        add(words);
+
+        GlassCard conclusion = new GlassCard();
+
+        conclusion.setBounds(140, 760, 960, 90);
+
+        conclusion.add(
+                new JLabel("Conclusion: High probability of common authorship."));
+
+        add(conclusion);
     }
 }
