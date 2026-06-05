@@ -72,6 +72,20 @@ public class ResultsPanel extends JPanel {
         repaint();
     }
 
+    private JScrollPane createStyledScroll(JTextArea ta) {
+
+        JScrollPane sp = new JScrollPane(ta);
+        sp.setOpaque(false);
+        sp.getViewport().setOpaque(false);
+        sp.setBorder(BorderFactory.createEmptyBorder());
+
+        sp.getVerticalScrollBar().setOpaque(false);
+        sp.getVerticalScrollBar().setPreferredSize(new Dimension(6, 0));
+        sp.getVerticalScrollBar().setUI(new HomePanel.ThinScrollBarUI(Theme.SCROLLBAR_THUMB));
+
+        return sp;
+    }
+
     public void updateResults(AnalysisResult result) {
         scorePanel.setScore(result.getSimilarity());
         // Wire additional AnalysisResult getters here as the API expands
@@ -169,12 +183,12 @@ public class ResultsPanel extends JPanel {
         sentCardA.add(sNameNeuA); sentCardA.add(sValNeuA);
         sentCardA.add(sNameNegA); sentCardA.add(sValNegA);
 
-        sNamePosB = lbl("● Positive", Theme.SUCCESS,  11f, SwingConstants.LEFT);
-        sValPosB  = lbl("—%",         Theme.TEXT_AREA_TEXT, 11f, SwingConstants.RIGHT);
-        sNameNeuB = lbl("● Neutral",  Theme.SUBTEXT,  11f, SwingConstants.LEFT);
-        sValNeuB  = lbl("—%",         Theme.TEXT_AREA_TEXT, 11f, SwingConstants.RIGHT);
-        sNameNegB = lbl("● Negative", Theme.NEGATIVE, 11f, SwingConstants.LEFT);
-        sValNegB  = lbl("—%",         Theme.TEXT_AREA_TEXT, 11f, SwingConstants.RIGHT);
+        sNamePosB = lbl("● Positive",Theme.SUCCESS,  11f, SwingConstants.LEFT);
+        sValPosB  = lbl("—%",Theme.TEXT_AREA_TEXT, 11f, SwingConstants.RIGHT);
+        sNameNeuB = lbl("● Neutral",Theme.SUBTEXT,  11f, SwingConstants.LEFT);
+        sValNeuB  = lbl("—%",Theme.TEXT_AREA_TEXT, 11f, SwingConstants.RIGHT);
+        sNameNegB = lbl("● Negative",Theme.NEGATIVE, 11f, SwingConstants.LEFT);
+        sValNegB  = lbl("—%",Theme.TEXT_AREA_TEXT, 11f, SwingConstants.RIGHT);
         sentCardB.add(sNamePosB); sentCardB.add(sValPosB);
         sentCardB.add(sNameNeuB); sentCardB.add(sValNeuB);
         sentCardB.add(sNameNegB); sentCardB.add(sValNegB);
@@ -223,8 +237,8 @@ public class ResultsPanel extends JPanel {
         int sH  = Math.max(150, (int)(avail * 0.21));             // stats
         int wH  = Math.max(210, (int)(avail * 0.27));             // words
         int seH = Math.max(140, (int)(avail * 0.18));             // sentiment
-        int cH  = Math.max(130, (int)(avail * 0.18));             // conclusion
-        int scH = Math.max(110, avail - sH - wH - seH - cH);     // score
+        int cH  = Math.max(130, (int)(avail * 0.18));
+        int scH = Math.max(110, avail - sH - wH - seH - cH);
 
         // ── Card bounds ───────────────────────────────────────────────────────
         int sY  = topArea;
