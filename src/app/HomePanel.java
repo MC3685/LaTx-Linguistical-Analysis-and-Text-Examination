@@ -154,6 +154,7 @@ public class HomePanel extends JPanel {
         int topMargin = 42;
 
         title.setBounds(0, topMargin, w, 52);
+        title.setFont(Architype.deriveFont((w*0.04f)));
         subtitle.setBounds(0, topMargin + 58, w, 24);
 
         int gap = Math.max(24, w / 45);
