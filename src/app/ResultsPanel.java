@@ -22,6 +22,7 @@ public class ResultsPanel extends JPanel {
 
         setBackground(Theme.BACKGROUND);
 
+
         setLayout(null);
 
         buildDashboard();

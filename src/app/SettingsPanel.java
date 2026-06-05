@@ -63,7 +63,7 @@ public class SettingsPanel extends JPanel {
 
         title.setForeground(Theme.PURPLE);
 
-        exitButton.setForeground(Theme.TEXT);
+
 
     }
 
@@ -138,7 +138,7 @@ public class SettingsPanel extends JPanel {
 
         exitButton = new GradientButton("EXIT");
         exitButton.setFocusPainted(false);
-        exitButton.setForeground(Theme.TEXT);
+        exitButton.setForeground(Color.WHITE);
         exitButton.setFont(HKModular.deriveFont(28f));
         exitButton.setBorderPainted(false);
 

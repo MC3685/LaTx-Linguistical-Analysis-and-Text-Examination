@@ -66,22 +66,18 @@ public class HomePanel extends JPanel {
         SwingUtilities.invokeLater(this::updateLayout);
     }
 
-    // ─────────────────────────────────────────────
-    // THEME APPLICATION
-    // ─────────────────────────────────────────────
-
     public void applyTheme() {
 
         setBackground(Theme.BACKGROUND);
 
         subtitle.setForeground(Theme.SUBTITLE);
 
-        textA.setBackground(new Color(0, 0, 0, 0));
+        textA.setBackground(Theme.BACKGROUND);
         textA.setForeground(Theme.TEXT_AREA_TEXT);
         textA.setCaretColor(Theme.TEXT_AREA_CARET);
         textA.setSelectionColor(Theme.TEXT_AREA_SELECTION);
 
-        textB.setBackground(new Color(0, 0, 0, 0));
+        textB.setBackground(Theme.BACKGROUND);
         textB.setForeground(Theme.TEXT_AREA_TEXT);
         textB.setCaretColor(Theme.TEXT_AREA_CARET);
         textB.setSelectionColor(Theme.TEXT_AREA_SELECTION);
@@ -89,9 +85,6 @@ public class HomePanel extends JPanel {
         repaint();
     }
 
-    // ─────────────────────────────────────────────
-    // BACKGROUND RENDERING
-    // ─────────────────────────────────────────────
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -102,9 +95,7 @@ public class HomePanel extends JPanel {
 
         int w = getWidth(), h = getHeight();
 
-        GradientPaint base = new GradientPaint(
-                0, 0, Theme.BACKGROUND_GRADIENT_TOP,
-                w, h, Theme.BACKGROUND_GRADIENT_BOTTOM
+        GradientPaint base = new GradientPaint(0, 0, Theme.BACKGROUND_GRADIENT_TOP, w, h, Theme.BACKGROUND_GRADIENT_BOTTOM
         );
 
         g2.setPaint(base);
@@ -122,20 +113,12 @@ public class HomePanel extends JPanel {
     }
 
     private void paintOrb(Graphics2D g2, int cx, int cy, int radius, Color color) {
-        RadialGradientPaint orb = new RadialGradientPaint(
-                new Point(cx, cy),
-                radius,
-                new float[]{0f, 1f},
-                new Color[]{color, new Color(0, 0, 0, 0)}
-        );
+        RadialGradientPaint orb = new RadialGradientPaint(new Point(cx, cy), radius, new float[]{0f, 1f}, new Color[]{color, new Color(0, 0, 0, 0)});
 
         g2.setPaint(orb);
         g2.fillOval(cx - radius, cy - radius, radius * 2, radius * 2);
     }
 
-    // ─────────────────────────────────────────────
-    // UI BUILD
-    // ─────────────────────────────────────────────
 
     private void buildUI() {
 
@@ -184,9 +167,6 @@ public class HomePanel extends JPanel {
         add(analyzeButton);
     }
 
-    // ─────────────────────────────────────────────
-    // LAYOUT
-    // ─────────────────────────────────────────────
 
     private void updateLayout() {
 
@@ -218,9 +198,6 @@ public class HomePanel extends JPanel {
         analyzeButton.setBounds(w / 2 - 160, h - 76, 320, 50);
     }
 
-    // ─────────────────────────────────────────────
-    // COMPONENTS
-    // ─────────────────────────────────────────────
 
     private JPanel createTextCard(String label) {
 
@@ -234,10 +211,7 @@ public class HomePanel extends JPanel {
                 g2.setColor(Theme.GLASS_CARD);
                 g2.fill(new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), 20, 20));
 
-                GradientPaint shine = new GradientPaint(
-                        0, 0, Theme.GLASS_HIGHLIGHT,
-                        0, getHeight() / 3f, new Color(0, 0, 0, 0)
-                );
+                GradientPaint shine = new GradientPaint(0, 0, Theme.GLASS_HIGHLIGHT, 0, getHeight() / 3f, new Color(0, 0, 0, 0));
 
                 g2.setPaint(shine);
                 g2.fill(new RoundRectangle2D.Float(0, 0, getWidth(), getHeight() / 3f, 20, 20));
@@ -288,9 +262,6 @@ public class HomePanel extends JPanel {
         return sp;
     }
 
-    // ─────────────────────────────────────────────
-    // BUTTONS
-    // ─────────────────────────────────────────────
 
     private JButton createImportButton(String text) {
 
@@ -312,10 +283,7 @@ public class HomePanel extends JPanel {
                     g2.setColor(Theme.BUTTON_IMPORT_PRESSED);
                     g2.fill(rr);
                 } else if (hover) {
-                    GradientPaint gp = new GradientPaint(
-                            0, 0, Theme.BUTTON_IMPORT_GRADIENT_START,
-                            getWidth(), getHeight(), Theme.BUTTON_IMPORT_GRADIENT_END
-                    );
+                    GradientPaint gp = new GradientPaint(0, 0, Theme.BUTTON_IMPORT_GRADIENT_START, getWidth(), getHeight(), Theme.BUTTON_IMPORT_GRADIENT_END);
                     g2.setPaint(gp);
                     g2.fill(rr);
                 } else {
@@ -325,10 +293,7 @@ public class HomePanel extends JPanel {
 
                 g2.setStroke(new BasicStroke(1.2f));
 
-                GradientPaint border = new GradientPaint(
-                        0, 0, Theme.BUTTON_IMPORT_BORDER_START,
-                        getWidth(), getHeight(), Theme.BUTTON_IMPORT_BORDER_END
-                );
+                GradientPaint border = new GradientPaint(0, 0, Theme.BUTTON_IMPORT_BORDER_START, getWidth(), getHeight(), Theme.BUTTON_IMPORT_BORDER_END);
 
                 g2.setPaint(border);
                 g2.draw(rr);
@@ -368,26 +333,16 @@ public class HomePanel extends JPanel {
                 boolean hover = getModel().isRollover();
                 boolean pressed = getModel().isPressed();
 
-                RoundRectangle2D.Float rr =
-                        new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), 50, 50);
+                RoundRectangle2D.Float rr = new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), 50, 50);
 
                 GradientPaint gp;
 
                 if (pressed) {
-                    gp = new GradientPaint(
-                            0, 0, Theme.BUTTON_ANALYZE_PRESSED_START,
-                            getWidth(), getHeight(), Theme.BUTTON_ANALYZE_PRESSED_END
-                    );
+                    gp = new GradientPaint(0, 0, Theme.BUTTON_ANALYZE_PRESSED_START, getWidth(), getHeight(), Theme.BUTTON_ANALYZE_PRESSED_END);
                 } else if (hover) {
-                    gp = new GradientPaint(
-                            0, 0, Theme.BUTTON_ANALYZE_HOVER_START,
-                            getWidth(), getHeight(), Theme.BUTTON_ANALYZE_HOVER_END
-                    );
+                    gp = new GradientPaint(0, 0, Theme.BUTTON_ANALYZE_HOVER_START, getWidth(), getHeight(), Theme.BUTTON_ANALYZE_HOVER_END);
                 } else {
-                    gp = new GradientPaint(
-                            0, 0, Theme.BUTTON_ANALYZE_START,
-                            getWidth(), getHeight(), Theme.BUTTON_ANALYZE_END
-                    );
+                    gp = new GradientPaint(0, 0, Theme.BUTTON_ANALYZE_START, getWidth(), getHeight(), Theme.BUTTON_ANALYZE_END);
                 }
 
                 g2.setPaint(gp);
@@ -430,9 +385,6 @@ public class HomePanel extends JPanel {
         return btn;
     }
 
-    // ─────────────────────────────────────────────
-    // FILE HANDLING (UNCHANGED)
-    // ─────────────────────────────────────────────
 
     public void FilePicker(MainFrame parent, JButton targetButton, JTextArea targetTextArea) {
         FileDialog fileDialog = new FileDialog(parent, "Open Text File", FileDialog.LOAD);
@@ -469,9 +421,6 @@ public class HomePanel extends JPanel {
         targetButton.setEnabled(false);
     }
 
-    // ─────────────────────────────────────────────
-    // INNER CLASSES (UNCHANGED STRUCTURALLY)
-    // ─────────────────────────────────────────────
 
     private static class RoundedGlowBorder extends AbstractBorder {
 
