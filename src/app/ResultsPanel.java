@@ -194,8 +194,8 @@ public class ResultsPanel extends JPanel {
         }
 
         // ── Sentiment ─────────────────────────────────────────────────────────
-        sentCardA = glassCard("SENTIMENT");
-        sentCardB = glassCard("SENTIMENT");
+        sentCardA = glassCard("TONE");
+        sentCardB = glassCard("TONE");
         contentPanel.add(sentCardA);
         contentPanel.add(sentCardB);
 
@@ -225,8 +225,8 @@ public class ResultsPanel extends JPanel {
         contentPanel.add(conchCardA);
         contentPanel.add(conchCardB);
 
-        conchTextA = lbl("<html>Awaiting analysis…</html>", Theme.TEXT, 11f, SwingConstants.LEFT);
-        conchTextB = lbl("<html>Awaiting analysis…</html>", Theme.TEXT, 11f, SwingConstants.LEFT);
+        conchTextA = lbl("Awaiting analysis…", Theme.TEXT, 11f, SwingConstants.LEFT);
+        conchTextB = lbl("Awaiting analysis…", Theme.TEXT, 11f, SwingConstants.LEFT);
         conchTextA.setVerticalAlignment(SwingConstants.TOP);
         conchTextB.setVerticalAlignment(SwingConstants.TOP);
         conchCardA.add(conchTextA);
