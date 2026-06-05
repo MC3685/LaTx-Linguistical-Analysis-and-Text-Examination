@@ -393,6 +393,7 @@ public class HomePanel extends JPanel {
             targetTextArea.setText(content);
             handleSuccessfulImport(chosenFile, targetButton);
         }
+
         catch (Exception ex) {
             JOptionPane.showMessageDialog(this,
                     "Failed to read file: ",
