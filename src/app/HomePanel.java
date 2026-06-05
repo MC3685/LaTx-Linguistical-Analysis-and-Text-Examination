@@ -44,11 +44,9 @@ public class HomePanel extends JPanel {
 
     private final MainFrame frame;
 
-    private static final Font HKModular =
-            FontLoader.load("HKModular-Bold.otf", 1f);
+    private static final Font HKModular = FontLoader.load("HKModular-Bold.otf", 1f);
 
-    private static final Font Architype =
-            FontLoader.load("Architype-Aubette.ttf", 1f);
+    private static final Font Architype = FontLoader.load("Architype-Aubette.ttf", 1f);
 
     public HomePanel(MainFrame frame) {
         this.frame = frame;
@@ -206,8 +204,8 @@ public class HomePanel extends JPanel {
 
         lbl = new JLabel("<html><body style='letter-spacing:3px'>" + label + "</body></html>", SwingConstants.CENTER);
         lbl.setForeground(Theme.CARD_LABEL);
-        lbl.setFont(HKModular != null ? HKModular.deriveFont(11f) : new Font("SansSerif", Font.BOLD, 11));
-        lbl.setBounds(0, 12, 200, 20);
+        lbl.setFont(HKModular.deriveFont(16f));
+        lbl.setBounds(0, 12, 400, 20);
 
         panel.add(lbl);
 
@@ -231,16 +229,16 @@ public class HomePanel extends JPanel {
 
     private JScrollPane createStyledScroll(JTextArea ta) {
 
-        JScrollPane sp = new JScrollPane(ta);
-        sp.setOpaque(false);
-        sp.getViewport().setOpaque(false);
-        sp.setBorder(BorderFactory.createEmptyBorder());
+        JScrollPane scroll = new JScrollPane(ta);
+        scroll.setOpaque(false);
+        scroll.getViewport().setOpaque(false);
+        scroll.setBorder(BorderFactory.createEmptyBorder());
 
-        sp.getVerticalScrollBar().setOpaque(false);
-        sp.getVerticalScrollBar().setPreferredSize(new Dimension(6, 0));
-        sp.getVerticalScrollBar().setUI(new ThinScrollBarUI(Theme.SCROLLBAR_THUMB));
+        scroll.getVerticalScrollBar().setOpaque(false);
+        scroll.getVerticalScrollBar().setPreferredSize(new Dimension(6, 0));
+        scroll.getVerticalScrollBar().setUI(new ThinScrollBarUI(Theme.SCROLLBAR_THUMB));
 
-        return sp;
+        return scroll;
     }
 
 
@@ -257,17 +255,22 @@ public class HomePanel extends JPanel {
                 boolean hover = getModel().isRollover();
                 boolean pressed = getModel().isPressed();
 
-                RoundRectangle2D.Float rr =
-                        new RoundRectangle2D.Float(1, 1, getWidth() - 2, getHeight() - 2, 30, 30);
+                RoundRectangle2D.Float rr = new RoundRectangle2D.Float(1, 1, getWidth() - 2, getHeight() - 2, 30, 30);
 
-                if (pressed) {
+                if (pressed)
+                {
                     g2.setColor(Theme.BUTTON_IMPORT_PRESSED);
                     g2.fill(rr);
-                } else if (hover) {
+
+                }
+                else if (hover)
+                {
                     GradientPaint gp = new GradientPaint(0, 0, Theme.BUTTON_IMPORT_GRADIENT_START, getWidth(), getHeight(), Theme.BUTTON_IMPORT_GRADIENT_END);
                     g2.setPaint(gp);
                     g2.fill(rr);
-                } else {
+                }
+                else
+                {
                     g2.setColor(Theme.BUTTON_IMPORT_IDLE);
                     g2.fill(rr);
                 }
@@ -318,11 +321,16 @@ public class HomePanel extends JPanel {
 
                 GradientPaint gp;
 
-                if (pressed) {
+                if (pressed)
+                {
                     gp = new GradientPaint(0, 0, Theme.BUTTON_ANALYZE_PRESSED_START, getWidth(), getHeight(), Theme.BUTTON_ANALYZE_PRESSED_END);
-                } else if (hover) {
+                }
+                else if (hover)
+                {
                     gp = new GradientPaint(0, 0, Theme.BUTTON_ANALYZE_HOVER_START, getWidth(), getHeight(), Theme.BUTTON_ANALYZE_HOVER_END);
-                } else {
+                }
+                else
+                {
                     gp = new GradientPaint(0, 0, Theme.BUTTON_ANALYZE_START, getWidth(), getHeight(), Theme.BUTTON_ANALYZE_END);
                 }
 
@@ -384,7 +392,8 @@ public class HomePanel extends JPanel {
             String content = Files.readString(chosenFile.toPath());
             targetTextArea.setText(content);
             handleSuccessfulImport(chosenFile, targetButton);
-        } catch (Exception ex) {
+        }
+        catch (Exception ex) {
             JOptionPane.showMessageDialog(this,
                     "Failed to read file: ",
                     "Import Error",
