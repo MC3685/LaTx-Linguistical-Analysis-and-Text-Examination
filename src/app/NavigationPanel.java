@@ -103,7 +103,7 @@ public class NavigationPanel extends JPanel {
     private void showHelp(MainFrame frame) {
 
         instructionsWindow = new JDialog(frame, false);
-        instructionsWindow.setSize(500, 500);
+        instructionsWindow.setSize(500, 600);
         instructionsWindow.setLocationRelativeTo(null);
         instructionsWindow.setLayout(new BorderLayout());
         ((JComponent) instructionsWindow.getContentPane()).setBorder(
@@ -111,10 +111,12 @@ public class NavigationPanel extends JPanel {
 
 
         instructionsArea = new JTextArea( // change intructions
-                """
-                        Instructions:
-                        Idk we gotta replace this eventually
-                        """
+                " Instructions:\n\n" +
+                " 1) How to Navigate Home\n" +
+                "       Type or copy paste any two pieces of text you would like\n" +
+                "       Or add a .txt file by clicking the add file buttons below the text field\n\n" +
+                " 2)"
+
         );
         instructionsArea.setEditable(false);
         instructionsArea.setFocusable(false);

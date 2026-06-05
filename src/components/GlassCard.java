@@ -25,23 +25,11 @@ public class GlassCard extends JPanel {
 
         g2.setColor(Theme.CARD);
 
-        g2.fillRoundRect(
-                0,
-                0,
-                getWidth()-1,
-                getHeight()-1,
-                30,
-                30);
+        g2.fillRoundRect(0, 0, getWidth()-1, getHeight()-1, 30, 30);
 
         g2.setColor(Theme.BORDER);
 
-        g2.drawRoundRect(
-                0,
-                0,
-                getWidth()-1,
-                getHeight()-1,
-                30,
-                30);
+        g2.drawRoundRect(0, 0, getWidth()-1, getHeight()-1, 30, 30);
 
         g2.dispose();
 
