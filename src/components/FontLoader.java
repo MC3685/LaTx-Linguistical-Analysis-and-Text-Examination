@@ -11,8 +11,7 @@ public final class FontLoader {
 
     public static Font load(String fileName, float size) {
         try {
-            InputStream stream =
-                    FontLoader.class.getResourceAsStream(fileName);
+            InputStream stream = FontLoader.class.getResourceAsStream(fileName);
 
             if (stream == null) {
                 throw new RuntimeException(

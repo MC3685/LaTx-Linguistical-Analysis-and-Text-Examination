@@ -20,27 +20,13 @@ public class GradientButton extends JButton {
     @Override
     protected void paintComponent(Graphics g) {
 
-        Graphics2D g2 =
-                (Graphics2D) g.create();
+        Graphics2D g2 = (Graphics2D) g.create();
 
-        GradientPaint paint =
-                new GradientPaint(
-                        0,
-                        0,
-                        Theme.PURPLE,
-                        getWidth(),
-                        0,
-                        Theme.BLUE);
+        GradientPaint paint = new GradientPaint(0, 0, Theme.PURPLE, getWidth(), 0, Theme.BLUE);
 
         g2.setPaint(paint);
 
-        g2.fillRoundRect(
-                0,
-                0,
-                getWidth(),
-                getHeight(),
-                20,
-                20);
+        g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
 
         super.paintComponent(g);
 
