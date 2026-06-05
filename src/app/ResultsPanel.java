@@ -432,7 +432,7 @@ public class ResultsPanel extends JPanel {
     private JPanel statsCardA,  statsCardB;
     private JPanel wordsCardA,  wordsCardB;
     private JPanel sentCardA,   sentCardB;
-    private JPanel concCardA,   concCardB;
+    private JPanel conchCardA,   conchCardB;
     private JPanel scoreCard;
 
     // ── stats labels  [6 rows × A/B × name/value] ────────────────────────────
@@ -452,7 +452,7 @@ public class ResultsPanel extends JPanel {
     private JLabel sNamePosB, sValPosB, sNameNeuB, sValNeuB, sNameNegB, sValNegB;
 
     // ── conclusion text ───────────────────────────────────────────────────────
-    private JLabel concTextA, concTextB;
+    private JLabel conchTextA, conchTextB;
 
     // ─────────────────────────────────────────────────────────────────────────
     public ResultsPanel() {
@@ -617,17 +617,17 @@ public class ResultsPanel extends JPanel {
         sentCardB.add(sNameNegB); sentCardB.add(sValNegB);
 
         // ── Conclusion ────────────────────────────────────────────────────────
-        concCardA = glassCard("CONCLUSION");
-        concCardB = glassCard("CONCLUSION");
-        contentPanel.add(concCardA);
-        contentPanel.add(concCardB);
+        conchCardA = glassCard("CONCLUSION");
+        conchCardB = glassCard("CONCLUSION");
+        contentPanel.add(conchCardA);
+        contentPanel.add(conchCardB);
 
-        concTextA = lbl("<html>Awaiting analysis…</html>", Theme.TEXT, 11f, SwingConstants.LEFT);
-        concTextB = lbl("<html>Awaiting analysis…</html>", Theme.TEXT, 11f, SwingConstants.LEFT);
-        concTextA.setVerticalAlignment(SwingConstants.TOP);
-        concTextB.setVerticalAlignment(SwingConstants.TOP);
-        concCardA.add(concTextA);
-        concCardB.add(concTextB);
+        conchTextA = lbl("<html>Awaiting analysis…</html>", Theme.TEXT, 11f, SwingConstants.LEFT);
+        conchTextB = lbl("<html>Awaiting analysis…</html>", Theme.TEXT, 11f, SwingConstants.LEFT);
+        conchTextA.setVerticalAlignment(SwingConstants.TOP);
+        conchTextB.setVerticalAlignment(SwingConstants.TOP);
+        conchCardA.add(conchTextA);
+        conchCardB.add(conchTextB);
 
         // ── Similarity Score (full-width) ─────────────────────────────────────
         scoreCard  = glassCard("SIMILARITY SCORE");
@@ -690,7 +690,7 @@ public class ResultsPanel extends JPanel {
         pair(statsCardA, statsCardB, side, sY,  cardW, sH,  gap);
         pair(wordsCardA, wordsCardB, side, wY,  cardW, wH,  gap);
         pair(sentCardA,  sentCardB,  side, seY, cardW, seH, gap);
-        pair(concCardA,  concCardB,  side, cY,  cardW, cH,  gap);
+        pair(conchCardA, conchCardB,  side, cY,  cardW, cH,  gap);
         scoreCard.setBounds(side, scY, 2 * cardW + gap, scH);
 
         int p = 12; // inner padding for card contents
@@ -732,8 +732,8 @@ public class ResultsPanel extends JPanel {
         }
 
         // ── Conclusion text ───────────────────────────────────────────────────
-        concTextA.setBounds(p, 36, cardW - 2 * p, cH - 48);
-        concTextB.setBounds(p, 36, cardW - 2 * p, cH - 48);
+        conchTextA.setBounds(p, 36, cardW - 2 * p, cH - 48);
+        conchTextB.setBounds(p, 36, cardW - 2 * p, cH - 48);
 
         // ── Score panel: centred inside full-width card ───────────────────────
         int fullW  = 2 * cardW + gap;
