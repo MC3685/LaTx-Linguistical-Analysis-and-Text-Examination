@@ -103,7 +103,7 @@ public class NavigationPanel extends JPanel {
     private void showHelp(MainFrame frame) {
 
         instructionsWindow = new JDialog(frame, false);
-        instructionsWindow.setSize(500, 600);
+        instructionsWindow.setSize(600, 550);
         instructionsWindow.setLocationRelativeTo(null);
         instructionsWindow.setLayout(new BorderLayout());
         ((JComponent) instructionsWindow.getContentPane()).setBorder(
@@ -115,7 +115,21 @@ public class NavigationPanel extends JPanel {
                 " 1) How to Navigate Home\n" +
                 "       Type or copy paste any two pieces of text you would like\n" +
                 "       Or add a .txt file by clicking the add file buttons below the text field\n\n" +
-                " 2)"
+                " 2) How to Navigate Reports\n" +
+                "       Statistics - gives you the number of each property that is used in to\n" +
+                "                        determine the similarity between both pieces of text\n"    +
+                "       Top 10 words - shows the top 10 most used words of both texts for you \n" +
+                "                               to compare\n"   +
+                "       Tone - shows you the probability of each text sounding either positive,\n" +
+                "                  negative or neutral\n" +
+                "       Conclusion - final report of each text to share similarities and\n" +
+                "                           dissimilarities\n\n"      +
+                " 3) How to Navigate Settings\n"  +
+                "       Dark mode vs Light mode, choose the color theme you like!\n"     +
+                "       Click the exit button to close the application\n\n"  +
+                " Source and Exit\n"   +
+                "       Click the source button to view our code on GitHub!\n"  +
+                "       Another exit button for easier access for you!"
 
         );
         instructionsArea.setEditable(false);

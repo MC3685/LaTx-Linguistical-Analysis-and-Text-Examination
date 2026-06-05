@@ -720,7 +720,7 @@ public class ResultsPanel extends JPanel {
     }
 
     private void pair(JPanel a, JPanel b, int x, int y, int w, int h, int gap) {
-        a.setBounds(x,         y, w, h);
+        a.setBounds(x,y,w,h);
         b.setBounds(x + w + gap, y, w, h);
     }
 
