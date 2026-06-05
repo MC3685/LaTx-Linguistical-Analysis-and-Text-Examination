@@ -30,12 +30,12 @@ public class RoundedToggle extends JToggleButton {
             g2.setColor(new Color(230, 230, 230)); // Light theme color
         }
 
-        // Paint the rounded background rectangle
+
         g2.fillRoundRect(0, 0, getWidth(), getHeight(), cornerRadius, cornerRadius);
 
         g2.dispose();
 
-        // Let Swing paint the text/foreground on top
+
         super.paintComponent(g);
     }
 }
