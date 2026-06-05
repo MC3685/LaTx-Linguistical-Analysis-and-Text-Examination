@@ -17,9 +17,6 @@ import java.nio.file.Files;
 
 public class HomePanel extends JPanel {
 
-    private JPanel panel;
-    private JTextArea area;
-
     private JTextArea textA;
     private JTextArea textB;
 
@@ -218,13 +215,9 @@ public class HomePanel extends JPanel {
         analyzeButton.setBounds(w / 2 - 160, h - 76, 320, 50);
     }
 
-    // ─────────────────────────────────────────────
-    // COMPONENTS
-    // ─────────────────────────────────────────────
-
     private JPanel createTextCard(String label) {
 
-        panel = new JPanel(null) {
+        JPanel panel = new JPanel(null) {
 
             @Override
             protected void paintComponent(Graphics g) {
@@ -261,7 +254,7 @@ public class HomePanel extends JPanel {
 
     private JTextArea createTextArea() {
 
-        area = new JTextArea();
+        JTextArea area = new JTextArea();
         area.setBackground(new Color(0, 0, 0, 0));
         area.setForeground(Theme.TEXT_AREA_TEXT);
         area.setCaretColor(Theme.TEXT_AREA_CARET);

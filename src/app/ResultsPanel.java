@@ -1,11 +1,13 @@
 package app;
 
-import components.*;
 import analysis.AnalysisResult;
-
+import app.widgets.AnalysisWidget;
+import components.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ResultsPanel extends JPanel {
 
@@ -15,114 +17,120 @@ public class ResultsPanel extends JPanel {
     private static final Font Architype =
             FontLoader.load("Architype-Aubette.ttf", 1f);
 
-    private CircularScorePanel scorePanel;
+    // ===== Core containers =====
+    private final JPanel contentPanel;
+    private final JScrollPane scrollPane;
+
+    // ===== Widget registry =====
+    private final List<AnalysisWidget> widgets = new ArrayList<>();
+
+    // ===== Header =====
     private JLabel title;
 
     public ResultsPanel() {
 
+        setLayout(new BorderLayout());
         setBackground(Theme.BACKGROUND);
 
-        setLayout(null);
+        // =========================================================
+        // Scrollable content container
+        // =========================================================
+        contentPanel = new JPanel();
+        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+        contentPanel.setBackground(Theme.BACKGROUND);
+
+        scrollPane = new JScrollPane(contentPanel);
+        scrollPane.setBorder(null);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        scrollPane.getHorizontalScrollBar().setUnitIncrement(16);
+        scrollPane.getViewport().setBackground(Theme.BACKGROUND);
+
+        add(scrollPane, BorderLayout.CENTER);
 
         buildDashboard();
     }
 
-    public void applyTheme()
-    {
+    // =============================================================
+    // PUBLIC API
+    // =============================================================
+
+    public void updateResults(AnalysisResult result) {
+
+        for (AnalysisWidget widget : widgets) {
+            widget.update(result);
+        }
+
+        revalidate();
+        repaint();
+    }
+
+    public void applyTheme() {
+
         setBackground(Theme.BACKGROUND);
-        title.setForeground(Theme.TEXT);
+        contentPanel.setBackground(Theme.BACKGROUND);
 
+        if (title != null) {
+            title.setForeground(Theme.TEXT);
+        }
+
+        repaint();
     }
 
-    public void updateResults(
-            AnalysisResult result) {
-
-        scorePanel.setScore(
-                result.getSimilarity());
-    }
+    // =============================================================
+    // DASHBOARD CONSTRUCTION
+    // =============================================================
 
     private void buildDashboard() {
 
+        // ===== Title =====
         title = new TitleGradient("ANALYSIS RESULTS");
-
         title.setFont(HKModular.deriveFont(34f));
-
         title.setForeground(Theme.TEXT);
 
-        title.setBounds(40, 20, 600, 50);
+        contentPanel.add(pad(title));
 
-        add(title);
+        // =========================================================
+        // Register widgets (order = UI order)
+        // =========================================================
 
-        GlassCard chartCard = new GlassCard();
+        widgets.add(new SentenceDistributionWidget());
+        widgets.add(new MetricsWidget());
+        widgets.add(new ScoreWidget());
+        widgets.add(new WordTableWidget());
+        widgets.add(new ConclusionWidget());
 
-        chartCard.setBounds(140, 130, 520, 260);
+        // =========================================================
+        // Add widgets to UI + set loading state
+        // =========================================================
 
-        chartCard.add(new JLabel("Sentence Length Distribution"));
+        for (AnalysisWidget widget : widgets) {
 
-        add(chartCard);
+            JComponent comp = widget.getComponent();
 
-        GlassCard metrics = new GlassCard();
+            comp.setAlignmentX(Component.LEFT_ALIGNMENT);
+            comp.setMaximumSize(new Dimension(Integer.MAX_VALUE, comp.getPreferredSize().height));
 
-        metrics.setBounds(
-                700, 130, 400, 260);
+            contentPanel.add(pad(comp));
 
-        metrics.setLayout(
-                new GridLayout(6, 1, 5, 5));
+            widget.setPlaceholderState();
+        }
 
-        metrics.add(
-                new MetricBar("Function Words", 93, Theme.PURPLE));
+        // spacer at bottom (prevents tight clipping)
+        contentPanel.add(Box.createVerticalGlue());
+    }
 
-        metrics.add(
-                new MetricBar("Sentence Structure", 85, Theme.BLUE));
+    // =============================================================
+    // UI HELPERS
+    // =============================================================
 
-        metrics.add(
-                new MetricBar("Vocabulary", 78, Theme.BLUE));
+    private JPanel pad(JComponent component) {
 
-        metrics.add(
-                new MetricBar("Punctuation", 90, Theme.SUCCESS));
+        JPanel wrapper = new JPanel(new BorderLayout());
+        wrapper.setBackground(Theme.BACKGROUND);
+        wrapper.add(component, BorderLayout.CENTER);
 
-        metrics.add(
-                new MetricBar("Rhythm", 82, Theme.SUCCESS));
+        wrapper.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 
-        metrics.add(
-                new MetricBar("Common Phrases", 76, Color.YELLOW));
-
-        add(metrics);
-
-        GlassCard score = new GlassCard();
-
-        score.setBounds(140, 420, 320, 300);
-
-        score.setLayout(new BorderLayout());
-
-
-        scorePanel =
-                new CircularScorePanel();
-
-        score.add(scorePanel);
-
-        add(score);
-
-        GlassCard words = new GlassCard();
-
-        words.setBounds(500, 420, 600, 300);
-
-        JTable table =
-                new JTable(
-                    new Object[][]{{"however",28,26,"96%"}, {"therefore",23,22,"95%"}, {"furthermore",19,18,"95%"}, {"significant",17,16,"94%"}},
-                        new Object[]{"Word","Text A", "Text B", "Similarity"});
-
-        words.add(new JScrollPane(table));
-
-        add(words);
-
-        GlassCard conclusion = new GlassCard();
-
-        conclusion.setBounds(140, 760, 960, 90);
-
-        conclusion.add(
-                new JLabel("Conclusion: High probability of common authorship."));
-
-        add(conclusion);
+        return wrapper;
     }
 }

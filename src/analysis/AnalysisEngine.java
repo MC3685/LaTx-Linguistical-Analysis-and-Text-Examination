@@ -8,81 +8,58 @@ public class AnalysisEngine {
             String textA,
             String textB) {
 
-        TextProfile profileA =
-                buildProfile(textA);
+        TextProfile profileA = buildProfile(textA);
 
-        TextProfile profileB =
-                buildProfile(textB);
+        TextProfile profileB = buildProfile(textB);
 
-        double sentenceScore =
-                SimilarityCalculator.compare(
+        double sentenceScore = SimilarityCalculator.compare(
                         profileA.avgSentenceLength,
                         profileB.avgSentenceLength);
 
-        double vocabScore =
-                SimilarityCalculator.compare(
+        double vocabScore = SimilarityCalculator.compare(
                         profileA.lexicalDiversity,
                         profileB.lexicalDiversity);
 
-        double punctuationScore =
-                SimilarityCalculator.compare(
+        double punctuationScore = SimilarityCalculator.compare(
                         profileA.punctuationDensity,
                         profileB.punctuationDensity);
 
-        double similarity =
-                sentenceScore * 0.35 +
+        double similarity = sentenceScore * 0.35 +
                         vocabScore * 0.35 +
                         punctuationScore * 0.30;
 
-        return new AnalysisResult(
-                similarity,
-                profileA,
-                profileB);
+        return new AnalysisResult(similarity, profileA, profileB);
     }
 
     private TextProfile buildProfile(
             String text) {
 
-        TextProfile profile =
-                new TextProfile();
+        TextProfile profile = new TextProfile();
 
-        List<String> words =
-                Tokenizer.words(text);
+        List<String> words = Tokenizer.words(text);
 
-        String[] sentences =
-                Tokenizer.sentences(text);
+        String[] sentences = Tokenizer.sentences(text);
 
-        profile.totalWords =
-                words.size();
+        profile.wordCount = words.size();
 
-        profile.uniqueWords =
-                (int)(Metrics.lexicalDiversity(
+        profile.uniqueWords = (int)(Metrics.lexicalDiversity(
                         words)
                         * words.size());
 
-        profile.avgWordLength =
-                Metrics.averageWordLength(
+        profile.avgWordLength = Metrics.averageWordLength(
                         words);
 
-        profile.avgSentenceLength =
-                Metrics.averageSentenceLength(
-                        sentences);
+        profile.avgSentenceLength = Metrics.averageSentenceLength(sentences);
 
-        profile.lexicalDiversity =
-                Metrics.lexicalDiversity(
-                        words);
+        profile.lexicalDiversity = Metrics.lexicalDiversity(words);
 
-        profile.commas =
-                count(text, ',');
+        profile.commas = count(text, ',');
 
-        profile.semicolons =
-                count(text, ';');
+        profile.semicolons = count(text, ';');
 
-        profile.questions =
-                count(text, '?');
+        profile.questions = count(text, '?');
 
-        profile.exclamations =
-                count(text, '!');
+        profile.exclamations = count(text, '!');
 
         profile.punctuationDensity =
                 (profile.commas +
@@ -92,24 +69,16 @@ public class AnalysisEngine {
                         /
                         Math.max(
                                 1.0,
-                                profile.totalWords);
+                                profile.wordCount);
 
         return profile;
     }
 
-    private int count(
-            String text,
-            char c) {
-
+    private int count(String text, char c) {
         int count = 0;
-
-        for(char x :
-                text.toCharArray()) {
-
-            if(x == c)
-                count++;
+        for(char x : text.toCharArray()) {
+            if(x == c) count++;
         }
-
         return count;
     }
 }

@@ -71,6 +71,7 @@ public class SettingsPanel extends JPanel {
 
         title = new TitleGradient("LINGUISTIC ANALYSIS AND TEXT EXAMINATION");
         title.setFont(Architype.deriveFont(40f));
+
         add(title);
 
         subtitle = new JLabel("SETTINGS", SwingConstants.CENTER);
