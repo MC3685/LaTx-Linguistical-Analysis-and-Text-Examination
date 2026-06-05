@@ -55,9 +55,7 @@ public class AnalysisResult {
 
         // 3. Sort by total frequency descending and limit to the top 10 elements
         List<WordComparison> top10List = fullList.stream()
-                .sorted((w1, w2) -> Integer.compare(w2.getTotalCount(), w1.getTotalCount()))
-                .limit(10)
-                .collect(Collectors.toList());
+                .sorted((w1, w2) -> Integer.compare(w2.getTotalCount(), w1.getTotalCount())).limit(10).collect(Collectors.toList());
 
         // 4. Map the top 10 elements into the 2D Object array
         Object[][] dataMatrix = new Object[top10List.size()][4];
@@ -95,3 +93,4 @@ public class AnalysisResult {
         public int getTotalCount() { return countA + countB; }
     }
 }
+
