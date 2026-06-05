@@ -12,7 +12,6 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.geom.RoundRectangle2D;
 import java.io.File;
-import java.io.FilenameFilter;
 import java.nio.file.Files;
 
 public class HomePanel extends JPanel {
@@ -116,6 +115,7 @@ public class HomePanel extends JPanel {
         add(cardB);
 
         textA = createTextArea();
+
         textB = createTextArea();
 
         scrollA = createStyledScroll(textA);
@@ -181,7 +181,6 @@ public class HomePanel extends JPanel {
     private JPanel createTextCard(String label) {
 
         panel = new JPanel(null) {
-
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
@@ -214,15 +213,27 @@ public class HomePanel extends JPanel {
 
     private JTextArea createTextArea() {
 
-        area = new JTextArea();
-        area.setBackground(new Color(0, 0, 0, 0));
+        JTextArea area = new JTextArea();
+
         area.setForeground(Theme.TEXT_AREA_TEXT);
         area.setCaretColor(Theme.TEXT_AREA_CARET);
         area.setSelectionColor(Theme.TEXT_AREA_SELECTION);
-        area.setFont(new Font("Monospaced", Font.PLAIN, 13));
+        area.setFont(new Font("Consolas", Font.PLAIN, 15));
         area.setLineWrap(true);
         area.setWrapStyleWord(true);
         area.setOpaque(false);
+
+        String placeholder = "Click to start typing, or add a file below...";
+        area.setText(placeholder);
+
+        area.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusGained(java.awt.event.FocusEvent e) {
+                if (area.getText().equals(placeholder)) {
+                    area.setText("");
+                }
+            }
+        });
 
         return area;
     }

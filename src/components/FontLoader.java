@@ -13,17 +13,9 @@ public final class FontLoader {
         try {
             InputStream stream = FontLoader.class.getResourceAsStream(fileName);
 
-            if (stream == null) {
-                throw new RuntimeException(
-                        "Could not find font: " + fileName);
-            }
-
             Font font = Font.createFont(Font.TRUETYPE_FONT, stream);
 
-            GraphicsEnvironment
-                    .getLocalGraphicsEnvironment()
-                    .registerFont(font);
-
+            GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(font);
             return font.deriveFont(size);
 
         } catch (Exception e) {

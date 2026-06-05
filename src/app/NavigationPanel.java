@@ -45,12 +45,7 @@ public class NavigationPanel extends JPanel {
 
         add(Box.createVerticalStrut(40));
 
-        add(navButton("? HELP", e ->
-                showHelp(frame)));
-
-        add(Box.createVerticalStrut(40));
-
-        add(navButton("! SOURCE", e -> openWebsite()));
+        add(navButton("? HELP", e -> showHelp(frame)));
 
         add(Box.createVerticalStrut(40));
 
@@ -110,7 +105,7 @@ public class NavigationPanel extends JPanel {
                 BorderFactory.createLineBorder(Theme.CARD, 5)); //change color - done
 
 
-        instructionsArea = new JTextArea( // change intructions
+        instructionsArea = new JTextArea(
                 " Instructions:\n\n" +
                 " 1) How to Navigate Home\n" +
                 "       Type or copy paste any two pieces of text you would like\n" +
@@ -136,7 +131,7 @@ public class NavigationPanel extends JPanel {
         instructionsArea.setFocusable(false);
         instructionsArea.setLineWrap(true);
         instructionsArea.setWrapStyleWord(true);
-        instructionsArea.setBackground(Theme.BACKGROUND); //change color - done
+        instructionsArea.setBackground(Theme.CARD); //change color - done
         instructionsArea.setForeground(Theme.TEXT);
         instructionsArea.setFont(new Font(Font.SANS_SERIF,Font.PLAIN , 16)); //change font - done
 
@@ -148,13 +143,5 @@ public class NavigationPanel extends JPanel {
         // Center popup
         instructionsWindow.setVisible(true);
 
-    }
-
-    private void openWebsite() {
-
-        try {
-            Desktop.getDesktop().browse(
-                    new URI("https://github.com/MC3685/LaTx"));
-        } catch(Exception ignored) {}
     }
 }

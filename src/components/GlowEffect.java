@@ -5,10 +5,6 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-/**
- * Adds a soft glow hover effect to any JComponent.
- * Works best with buttons and panels.
- */
 public class GlowEffect {
 
     private final JComponent component;

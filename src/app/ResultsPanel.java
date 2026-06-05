@@ -20,44 +20,35 @@ public class ResultsPanel extends JPanel {
             "Punct. Rate", "Avg Sent. Len", "Avg Word Len"
     };
 
-    // ── scrolling infrastructure ──────────────────────────────────────────────
     private JScrollPane scrollPane;
     private JPanel contentPanel;
 
-    // ── kept infrastructure ───────────────────────────────────────────────────
     private CircularScorePanel scorePanel;
     private JLabel title;
 
-    // ── column headers (span the top of all card rows) ────────────────────────
     private JLabel colHeaderA, colHeaderB;
 
-    // ── glass section cards ───────────────────────────────────────────────────
     private JPanel statsCardA,  statsCardB;
     private JPanel wordsCardA,  wordsCardB;
     private JPanel sentCardA,   sentCardB;
     private JPanel conchCardA,   conchCardB;
     private JPanel scoreCard;
 
-    // ── stats labels  [6 rows × A/B × name/value] ────────────────────────────
     private final JLabel[] statNameA = new JLabel[6];
     private final JLabel[] statValA  = new JLabel[6];
     private final JLabel[] statNameB = new JLabel[6];
     private final JLabel[] statValB  = new JLabel[6];
 
-    // ── top-10 word labels  [10 rows × A/B × rank/text] ──────────────────────
     private final JLabel[] wordRankA = new JLabel[10];
     private final JLabel[] wordTextA = new JLabel[10];
     private final JLabel[] wordRankB = new JLabel[10];
     private final JLabel[] wordTextB = new JLabel[10];
 
-    // ── sentiment labels  [3 rows × A/B × name/value] ────────────────────────
     private JLabel sNamePosA, sValPosA, sNameNeuA, sValNeuA, sNameNegA, sValNegA;
     private JLabel sNamePosB, sValPosB, sNameNeuB, sValNeuB, sNameNegB, sValNegB;
 
-    // ── conclusion text ───────────────────────────────────────────────────────
-    private JLabel conchTextA, conchTextB;
+    private JLabel conchTextA, conchTextB; //conclusion A and B
 
-    // ─────────────────────────────────────────────────────────────────────────
     public ResultsPanel() {
         setBackground(Theme.BACKGROUND);
         setLayout(new BorderLayout());
@@ -69,7 +60,6 @@ public class ResultsPanel extends JPanel {
         SwingUtilities.invokeLater(this::updateLayout);
     }
 
-    // ── kept method signatures ────────────────────────────────────────────────
     public void applyTheme() {
         setBackground(Theme.BACKGROUND);
         title.setForeground(Theme.TITLE);
@@ -79,7 +69,50 @@ public class ResultsPanel extends JPanel {
 
     public void updateResults(AnalysisResult result) {
         scorePanel.setScore(result.getSimilarity());
-        // Wire additional AnalysisResult getters here as the API expands
+
+        // Update statistics
+        analysis.TextProfile profileA = result.getProfileA();
+        analysis.TextProfile profileB = result.getProfileB();
+
+        String[] statsA = {
+            String.valueOf(profileA.wordCount),
+            String.valueOf(profileA.wordCount / Math.max(1, profileA.avgSentenceLength)),
+            String.valueOf((int)(profileA.wordCount * profileA.avgWordLength)),
+            String.format("%.1f */.", profileA.punctuationDensity * 100),
+            String.format("%.1f", profileA.avgSentenceLength),
+            String.format("%.1f", profileA.avgWordLength)
+        };
+
+        String[] statsB = {
+            String.valueOf(profileB.wordCount),
+            String.valueOf(profileB.wordCount / Math.max(1, profileB.avgSentenceLength)),
+            String.valueOf((int)(profileB.wordCount * profileB.avgWordLength)),
+            String.format("%.1f */.", profileB.punctuationDensity * 100),
+            String.format("%.1f", profileB.avgSentenceLength),
+            String.format("%.1f", profileB.avgWordLength)
+        };
+
+        for (int i = 0; i < 6; i++) {
+            statValA[i].setText(statsA[i]);
+            statValB[i].setText(statsB[i]);
+        }
+
+        // Update top 10 words
+        Object[][] topWords = result.getTopWords();
+        for (int i = 0; i < 10; i++) {
+            if (i < topWords.length) {
+                wordTextA[i].setText((String) topWords[i][0] + " (" + topWords[i][1] + ")");
+                wordTextB[i].setText((String) topWords[i][0] + " (" + topWords[i][2] + ")");
+            } else {
+                wordTextA[i].setText("—");
+                wordTextB[i].setText("—");
+            }
+        }
+
+        // Update conclusion
+        conchTextA.setText(result.getConclusion());
+        conchTextB.setText(result.getConclusion());
+
         contentPanel.repaint();
         repaint();
     }
@@ -98,7 +131,6 @@ public class ResultsPanel extends JPanel {
         return spa;
     }
 
-    // ── aurora gradient background (matches HomePanel) ────────────────────────
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -127,21 +159,17 @@ public class ResultsPanel extends JPanel {
         g2.fillOval(cx - r, cy - r, r * 2, r * 2);
     }
 
-    // ── dashboard construction ────────────────────────────────────────────────
     private void buildDashboard() {
 
-        // ── Content panel (scrollable inner panel) ────────────────────────────
         contentPanel = new JPanel(null) {
             @Override
             protected void paintComponent(Graphics g) {
-                // Transparent so outer gradient shows through
                 super.paintComponent(g);
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
                 int w = getWidth();
 
-                // Hairline divider below title
                 g2.setColor(Theme.DIVIDER);
                 g2.setStroke(new BasicStroke(1f));
                 g2.drawLine(40, 115, w - 40, 115);
@@ -156,7 +184,6 @@ public class ResultsPanel extends JPanel {
         title.setForeground(Theme.TITLE);
         contentPanel.add(title);
 
-        // Column headers sit above every card row as persistent orientation labels
         colHeaderA = lbl("TEXT  A", Theme.CARD_LABEL, 13f, SwingConstants.CENTER);
         colHeaderB = lbl("TEXT  B", Theme.CARD_LABEL, 13f, SwingConstants.CENTER);
         // Letter-spacing via HTML (same trick used in HomePanel card labels)
@@ -165,13 +192,12 @@ public class ResultsPanel extends JPanel {
         contentPanel.add(colHeaderA);
         contentPanel.add(colHeaderB);
 
-        // ── Statistics ────────────────────────────────────────────────────────
         statsCardA = glassCard("STATISTICS");
         statsCardB = glassCard("STATISTICS");
         contentPanel.add(statsCardA);
         contentPanel.add(statsCardB);
         for (int i = 0; i < 6; i++) {
-            statNameA[i] = lbl(STAT_NAMES[i], Theme.SUBTEXT,        11f, SwingConstants.LEFT);
+            statNameA[i] = lbl(STAT_NAMES[i], Theme.SUBTEXT, 11f, SwingConstants.LEFT);
             statValA[i]  = lbl("—",           Theme.TEXT_AREA_TEXT, 11f, SwingConstants.RIGHT);
             statNameB[i] = lbl(STAT_NAMES[i], Theme.SUBTEXT,        11f, SwingConstants.LEFT);
             statValB[i]  = lbl("—",           Theme.TEXT_AREA_TEXT, 11f, SwingConstants.RIGHT);
@@ -179,126 +205,118 @@ public class ResultsPanel extends JPanel {
             statsCardB.add(statNameB[i]); statsCardB.add(statValB[i]);
         }
 
-        // ── Top 10 Words ──────────────────────────────────────────────────────
         wordsCardA = glassCard("TOP 10 WORDS");
         wordsCardB = glassCard("TOP 10 WORDS");
         contentPanel.add(wordsCardA);
         contentPanel.add(wordsCardB);
         for (int i = 0; i < 10; i++) {
-            wordRankA[i] = lbl(String.valueOf(i + 1), Theme.ACCENT_PURPLE, 10f, SwingConstants.RIGHT);
-            wordTextA[i] = lbl("—",                  Theme.TEXT_AREA_TEXT, 11f, SwingConstants.LEFT);
-            wordRankB[i] = lbl(String.valueOf(i + 1), Theme.ACCENT_PURPLE, 10f, SwingConstants.RIGHT);
-            wordTextB[i] = lbl("—",                  Theme.TEXT_AREA_TEXT, 11f, SwingConstants.LEFT);
+            wordRankA[i] = lbl(String.valueOf(i + 1), Theme.ACCENT_PURPLE, 13f, SwingConstants.RIGHT);
+            wordTextA[i] = lbl("—",                  Theme.TEXT_AREA_TEXT, 14f, SwingConstants.LEFT);
+            wordRankB[i] = lbl(String.valueOf(i + 1), Theme.ACCENT_PURPLE, 13f, SwingConstants.RIGHT);
+            wordTextB[i] = lbl("—",                  Theme.TEXT_AREA_TEXT, 14f, SwingConstants.LEFT);
             wordsCardA.add(wordRankA[i]); wordsCardA.add(wordTextA[i]);
             wordsCardB.add(wordRankB[i]); wordsCardB.add(wordTextB[i]);
         }
 
-        // ── Sentiment ─────────────────────────────────────────────────────────
         sentCardA = glassCard("TONE");
         sentCardB = glassCard("TONE");
         contentPanel.add(sentCardA);
         contentPanel.add(sentCardB);
 
-        sNamePosA = lbl("● Positive", Theme.SUCCESS,  11f, SwingConstants.LEFT);
-        sValPosA  = lbl("—%",         Theme.TEXT_AREA_TEXT, 11f, SwingConstants.RIGHT);
-        sNameNeuA = lbl("● Neutral",  Theme.SUBTEXT,  11f, SwingConstants.LEFT);
-        sValNeuA  = lbl("—%",         Theme.TEXT_AREA_TEXT, 11f, SwingConstants.RIGHT);
-        sNameNegA = lbl("● Negative", Theme.NEGATIVE, 11f, SwingConstants.LEFT);
-        sValNegA  = lbl("—%",         Theme.TEXT_AREA_TEXT, 11f, SwingConstants.RIGHT);
+        sNamePosA = lbl("- Positive", Theme.SUCCESS,  18f, SwingConstants.LEFT);
+        sValPosA  = lbl("—*/.",         Theme.TEXT_AREA_TEXT, 18f, SwingConstants.RIGHT);
+        sNameNeuA = lbl("- Neutral",  Theme.SUBTEXT,  18f, SwingConstants.LEFT);
+        sValNeuA  = lbl("—*/.",         Theme.TEXT_AREA_TEXT, 18f, SwingConstants.RIGHT);
+        sNameNegA = lbl("- Negative", Theme.NEGATIVE, 18f, SwingConstants.LEFT);
+        sValNegA  = lbl("—*/.",         Theme.TEXT_AREA_TEXT, 18f, SwingConstants.RIGHT);
         sentCardA.add(sNamePosA); sentCardA.add(sValPosA);
         sentCardA.add(sNameNeuA); sentCardA.add(sValNeuA);
         sentCardA.add(sNameNegA); sentCardA.add(sValNegA);
 
-        sNamePosB = lbl("● Positive", Theme.SUCCESS,  11f, SwingConstants.LEFT);
-        sValPosB  = lbl("—%",         Theme.TEXT_AREA_TEXT, 11f, SwingConstants.RIGHT);
-        sNameNeuB = lbl("● Neutral",  Theme.SUBTEXT,  11f, SwingConstants.LEFT);
-        sValNeuB  = lbl("—%",         Theme.TEXT_AREA_TEXT, 11f, SwingConstants.RIGHT);
-        sNameNegB = lbl("● Negative", Theme.NEGATIVE, 11f, SwingConstants.LEFT);
-        sValNegB  = lbl("—%",         Theme.TEXT_AREA_TEXT, 11f, SwingConstants.RIGHT);
+        sNamePosB = lbl("● Positive", Theme.SUCCESS,  18f, SwingConstants.LEFT);
+        sValPosB  = lbl("—*/.",         Theme.TEXT_AREA_TEXT, 18f, SwingConstants.RIGHT);
+        sNameNeuB = lbl("● Neutral",  Theme.SUBTEXT,  18f, SwingConstants.LEFT);
+        sValNeuB  = lbl("—*/.",         Theme.TEXT_AREA_TEXT, 18f, SwingConstants.RIGHT);
+        sNameNegB = lbl("● Negative", Theme.NEGATIVE, 18f, SwingConstants.LEFT);
+        sValNegB  = lbl("—*/.",         Theme.TEXT_AREA_TEXT, 18f, SwingConstants.RIGHT);
         sentCardB.add(sNamePosB); sentCardB.add(sValPosB);
         sentCardB.add(sNameNeuB); sentCardB.add(sValNeuB);
         sentCardB.add(sNameNegB); sentCardB.add(sValNegB);
 
-        // ── Conclusion ────────────────────────────────────────────────────────
         conchCardA = glassCard("CONCLUSION");
         conchCardB = glassCard("CONCLUSION");
         contentPanel.add(conchCardA);
         contentPanel.add(conchCardB);
 
-        conchTextA = lbl("Awaiting analysis…", Theme.TEXT, 11f, SwingConstants.LEFT);
-        conchTextB = lbl("Awaiting analysis…", Theme.TEXT, 11f, SwingConstants.LEFT);
+        conchTextA = lbl("Awaiting analysis…", Theme.TEXT_AREA_TEXT, 13f, SwingConstants.LEFT);
+        conchTextB = lbl("Awaiting analysis…", Theme.TEXT, 13f, SwingConstants.LEFT);
+        conchTextB.setForeground(Theme.TEXT_AREA_TEXT);
+
+
         conchTextA.setVerticalAlignment(SwingConstants.TOP);
         conchTextB.setVerticalAlignment(SwingConstants.TOP);
         conchCardA.add(conchTextA);
         conchCardB.add(conchTextB);
 
-        // ── Similarity Score (full-width) ─────────────────────────────────────
         scoreCard  = glassCard("SIMILARITY SCORE");
         scorePanel = new CircularScorePanel();
         scoreCard.add(scorePanel);
         contentPanel.add(scoreCard);
 
-        // ── Scroll pane wrapping content ──────────────────────────────────────
         scrollPane = createStyledScroll(contentPanel);
         scrollPane.setOpaque(false);
         scrollPane.getViewport().setOpaque(false);
         scrollPane.setBorder(null);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.getVerticalScrollBar().setUnitIncrement(4);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(2);
 
         add(scrollPane, BorderLayout.CENTER);
     }
 
-    // ── layout ────────────────────────────────────────────────────────────────
     private void updateLayout() {
         int w = getWidth();
         if (w < 100) return;
 
-        // Derived metrics
         int side  = Math.max(32, w / 22);
         int gap   = Math.max(14, w / 55);
         int cardW = (w - 2 * side - gap) / 2;
         if (cardW < 80) return;
 
-        // ── Fixed section heights (minimum sizes for scrollable content) ──────
         int topArea   = 128;
         int btmPad    = 28;
         int interGap  = 14;
 
-        int sH  = 150;   // stats
-        int wH  = 240;   // words (10 rows need more space)
-        int seH = 120;   // sentiment
-        int cH  = 130;   // conclusion
-        int scH = 140;   // score
+        int sH  = 180;
+        int wH  = 330;
+        int seH = 150;
+        int cH  = 200;
+        int scH = 300;
 
         // Total content height
         int contentHeight = topArea + sH + wH + seH + cH + scH + 4 * interGap + btmPad;
 
-        // Set the preferred size of content panel for scrolling
         contentPanel.setPreferredSize(new Dimension(w, contentHeight));
 
-        // ── Header area ───────────────────────────────────────────────────────
         title.setBounds(0, 25, w, 52);
         colHeaderA.setBounds(side,              88, cardW, 26);
         colHeaderB.setBounds(side + cardW + gap, 88, cardW, 26);
 
-        // ── Card bounds ───────────────────────────────────────────────────────
         int sY  = topArea;
         int wY  = sY  + sH  + interGap;
         int seY = wY  + wH  + interGap;
         int cY  = seY + seH + interGap;
         int scY = cY  + cH  + interGap;
 
+        //for setting sizes
         pair(statsCardA, statsCardB, side, sY,  cardW, sH,  gap);
         pair(wordsCardA, wordsCardB, side, wY,  cardW, wH,  gap);
         pair(sentCardA,  sentCardB,  side, seY, cardW, seH, gap);
         pair(conchCardA, conchCardB,  side, cY,  cardW, cH,  gap);
         scoreCard.setBounds(side, scY, 2 * cardW + gap, scH);
 
-        int p = 12; // inner padding for card contents
+        int p = 12; // here for inner padding (of card contents)
 
-        // ── Stats rows ────────────────────────────────────────────────────────
         int rowH = Math.max(1, (sH - 38) / 6);
         int half = cardW / 2;
         for (int i = 0; i < 6; i++) {
@@ -309,7 +327,6 @@ public class ResultsPanel extends JPanel {
             statValB[i] .setBounds(half, ry, half - p,      rowH);
         }
 
-        // ── Word rows ─────────────────────────────────────────────────────────
         int wRowH = Math.max(1, (wH - 38) / 10);
         for (int i = 0; i < 10; i++) {
             int ry = 36 + i * wRowH;
@@ -319,7 +336,7 @@ public class ResultsPanel extends JPanel {
             wordTextB[i].setBounds(p + 24,  ry, cardW - p - 26,  wRowH);
         }
 
-        // ── Sentiment rows ────────────────────────────────────────────────────
+
         JLabel[] snA = {sNamePosA, sNameNeuA, sNameNegA};
         JLabel[] svA = {sValPosA,  sValNeuA,  sValNegA };
         JLabel[] snB = {sNamePosB, sNameNeuB, sNameNegB};
@@ -334,13 +351,11 @@ public class ResultsPanel extends JPanel {
             svB[i].setBounds(two3,   ry, cardW - two3 - p,   seRowH);
         }
 
-        // ── Conclusion text ───────────────────────────────────────────────────
         conchTextA.setBounds(p, 36, cardW - 2 * p, cH - 48);
         conchTextB.setBounds(p, 36, cardW - 2 * p, cH - 48);
 
-        // ── Score panel: centred inside full-width card ───────────────────────
         int fullW  = 2 * cardW + gap;
-        int spSize = Math.min(scH - 30, 90);
+        int spSize = Math.max(scH - 30, 90);
         scorePanel.setBounds(fullW / 2 - spSize / 2, (scH - spSize) / 2, spSize, spSize);
 
         contentPanel.revalidate();
@@ -352,7 +367,6 @@ public class ResultsPanel extends JPanel {
         b.setBounds(x + w + gap, y, w, h);
     }
 
-    // ── glass card factory ────────────────────────────────────────────────────
     private JPanel glassCard(final String sectionTitle) {
         JPanel p = new JPanel(null) {
             @Override
@@ -361,22 +375,18 @@ public class ResultsPanel extends JPanel {
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 int cw = getWidth(), ch = getHeight();
 
-                // Frosted glass fill
                 g2.setColor(Theme.GLASS_CARD);
                 g2.fill(new RoundRectangle2D.Float(0, 0, cw, ch, 18, 18));
 
-                // Top-edge shine
                 g2.setPaint(new GradientPaint(
                         0, 0,           Theme.GLASS_HIGHLIGHT,
                         0, ch / 3f,     new Color(255, 255, 255, 0)));
                 g2.fill(new RoundRectangle2D.Float(0, 0, cw, ch / 3f, 18, 18));
 
-                // Section title text
                 g2.setColor(Theme.CARD_LABEL);
                 g2.setFont(f(HKModular, 10f));
                 g2.drawString(sectionTitle, 14, 22);
 
-                // Hairline divider below title
                 g2.setColor(Theme.DIVIDER);
                 g2.setStroke(new BasicStroke(1f));
                 g2.drawLine(12, 30, cw - 12, 30);
@@ -389,7 +399,6 @@ public class ResultsPanel extends JPanel {
         return p;
     }
 
-    // ── label factory ─────────────────────────────────────────────────────────
     private JLabel lbl(String text, Color fg, float size, int align) {
         JLabel l = new JLabel(text, align);
         l.setForeground(fg);
@@ -401,7 +410,6 @@ public class ResultsPanel extends JPanel {
         return base != null ? base.deriveFont(size) : new Font("SansSerif", Font.PLAIN, (int) size);
     }
 
-    // ── RoundedGlowBorder (mirrors HomePanel) ─────────────────────────────────
     private static class RoundedGlowBorder extends AbstractBorder {
         private final int   radius;
         private final Color inner, outer;
@@ -436,7 +444,6 @@ public class ResultsPanel extends JPanel {
         }
     }
 
-    // ── Modern styled scrollbar UI ────────────────────────────────────────────
     private static class ModernScrollBarUI extends javax.swing.plaf.basic.BasicScrollBarUI {
         @Override
         protected void configureScrollBarColors() {

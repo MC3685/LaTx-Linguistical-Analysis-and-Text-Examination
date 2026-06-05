@@ -158,27 +158,10 @@ public class SettingsPanel extends JPanel {
         settingsCard.add(modeLabelRight);
 
 
-        themeToggle = new JToggleButton("Dark") {
-            @Override
-            protected void paintComponent(Graphics g) {
-
-                Graphics2D g2 = (Graphics2D) g.create();
-
-
-                GradientPaint paint = new GradientPaint(
-                        0, 0, Theme.PURPLE,
-                        getWidth(), 0, Theme.BLUE);
-
-                g2.setPaint(paint);
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
-
-                super.paintComponent(g);
-
-                g2.dispose();
-            }};
-        //themeToggle.setFocusPainted(false);
+        themeToggle = new GradientToggle("Dark");
+        themeToggle.setFocusPainted(false);
         themeToggle.setBorderPainted(false);
-        themeToggle.setFont(Architype.deriveFont(10f));
+        themeToggle.setFont(Architype.deriveFont(15f));
         themeToggle.setBackground(Theme.BACKGROUND);
 
         themeToggle.addActionListener(e -> {
