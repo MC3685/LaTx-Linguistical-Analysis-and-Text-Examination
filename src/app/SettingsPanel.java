@@ -3,9 +3,11 @@ package app;
 import components.*;
 
 import javax.swing.*;
+import javax.swing.border.AbstractBorder;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.geom.RoundRectangle2D;
 
 public class SettingsPanel extends JPanel {
 
@@ -67,6 +69,46 @@ public class SettingsPanel extends JPanel {
 
     }
 
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        BackgroundPainter.paintBackground(g, this);
+    }
+
+    private static class RoundedGlowBorder extends AbstractBorder {
+
+        private final int radius;
+        private final Color inner, outer;
+
+        RoundedGlowBorder(int radius, Color inner, Color outer) {
+            this.radius = radius;
+            this.inner = inner;
+            this.outer = outer;
+        }
+
+        @Override
+        public void paintBorder(Component c, Graphics g, int x, int y, int w, int h) {
+
+            Graphics2D g2 = (Graphics2D) g.create();
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+            g2.setStroke(new BasicStroke(3f));
+            g2.setColor(outer);
+            g2.draw(new RoundRectangle2D.Float(x + 1, y + 1, w - 2, h - 2, radius + 2, radius + 2));
+
+            g2.setStroke(new BasicStroke(1.2f));
+            g2.setColor(inner);
+            g2.draw(new RoundRectangle2D.Float(x + 2, y + 2, w - 4, h - 4, radius, radius));
+
+            g2.dispose();
+        }
+
+        @Override
+        public Insets getBorderInsets(Component c) {
+            return new Insets(radius / 2, radius / 2, radius / 2, radius / 2);
+        }
+    }
+
     private void buildUI() {
 
         title = new TitleGradient("LINGUISTIC ANALYSIS AND TEXT EXAMINATION");
@@ -79,9 +121,29 @@ public class SettingsPanel extends JPanel {
 
         add(subtitle);
 
-        settingsCard = new JPanel(null);
+        settingsCard = new JPanel(null) {
+
+            @Override
+            protected void paintComponent(Graphics g) {
+
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+                g2.setColor(Theme.GLASS_CARD);
+                g2.fill(new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), 20, 20));
+
+                GradientPaint shine = new GradientPaint(0, 0, Theme.GLASS_HIGHLIGHT, 0, getHeight() / 3f, new Color(0, 0, 0, 0));
+
+                g2.setPaint(shine);
+                g2.fill(new RoundRectangle2D.Float(0, 0, getWidth(), getHeight() / 3f, 20, 20));
+
+                g2.dispose();
+            }
+        };
+
+        settingsCard.setOpaque(false);
         settingsCard.setBackground(Theme.CARD);
-        settingsCard.setBorder(BorderFactory.createLineBorder(Theme.BORDER, 2));
+        settingsCard.setBorder(new SettingsPanel.RoundedGlowBorder(20, Theme.ACCENT_PURPLE_SOFT, Theme.ACCENT_BLUE_SOFT));
         add(settingsCard);
 
         modeLabelLeft = new JLabel("DARK MODE");
@@ -97,20 +159,22 @@ public class SettingsPanel extends JPanel {
 
         themeToggle = new JToggleButton("Dark") {
             @Override
-        protected void paintComponent(Graphics g) {
+            protected void paintComponent(Graphics g) {
 
-            Graphics2D g2 = (Graphics2D) g.create();
+                Graphics2D g2 = (Graphics2D) g.create();
 
-            GradientPaint paint = new GradientPaint(0, 0, Theme.PURPLE, getWidth(), 0, Theme.BLUE);
 
-            g2.setPaint(paint);
+                GradientPaint paint = new GradientPaint(
+                        0, 0, Theme.PURPLE,
+                        getWidth(), 0, Theme.BLUE);
 
-            g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
+                g2.setPaint(paint);
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
 
-            super.paintComponent(g);
+                super.paintComponent(g);
 
-            g2.dispose();
-        }};
+                g2.dispose();
+            }};
         //themeToggle.setFocusPainted(false);
         themeToggle.setBorderPainted(false);
         themeToggle.setFont(Architype.deriveFont(10f));

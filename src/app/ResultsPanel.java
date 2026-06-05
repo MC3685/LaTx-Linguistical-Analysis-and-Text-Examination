@@ -28,6 +28,12 @@ public class ResultsPanel extends JPanel {
         buildDashboard();
     }
 
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        BackgroundPainter.paintBackground(g, this);
+    }
+
     public void applyTheme()
     {
         setBackground(Theme.BACKGROUND);
