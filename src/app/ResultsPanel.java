@@ -481,6 +481,20 @@ public class ResultsPanel extends JPanel {
         repaint();
     }
 
+    private JScrollPane createStyledScroll(JPanel pa) {
+
+        JScrollPane spa = new JScrollPane(pa);
+        spa.setOpaque(false);
+        spa.getViewport().setOpaque(false);
+        spa.setBorder(BorderFactory.createEmptyBorder());
+
+        spa.getVerticalScrollBar().setOpaque(false);
+        spa.getVerticalScrollBar().setPreferredSize(new Dimension(6, 0));
+        spa.getVerticalScrollBar().setUI(new HomePanel.ThinScrollBarUI(Theme.SCROLLBAR_THUMB));
+
+        return spa;
+    }
+
     // ── aurora gradient background (matches HomePanel) ────────────────────────
     @Override
     protected void paintComponent(Graphics g) {
@@ -622,16 +636,13 @@ public class ResultsPanel extends JPanel {
         contentPanel.add(scoreCard);
 
         // ── Scroll pane wrapping content ──────────────────────────────────────
-        scrollPane = new JScrollPane(contentPanel);
+        scrollPane = createStyledScroll(contentPanel);
         scrollPane.setOpaque(false);
         scrollPane.getViewport().setOpaque(false);
         scrollPane.setBorder(null);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
-
-        // Style the scrollbar to match the theme
-        scrollPane.getVerticalScrollBar().setUI(new ModernScrollBarUI());
+        scrollPane.getVerticalScrollBar().setUnitIncrement(4);
 
         add(scrollPane, BorderLayout.CENTER);
     }
