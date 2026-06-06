@@ -49,6 +49,7 @@ public class ResultsPanel extends JPanel {
 
     private JLabel conchTextA, conchTextB; //conclusion A and B
 
+
     public ResultsPanel() {
         setBackground(Theme.BACKGROUND);
         setLayout(new BorderLayout());
@@ -287,22 +288,22 @@ public class ResultsPanel extends JPanel {
         contentPanel.add(sentCardB);
 
         sNameTotA = lbl("Total ", Theme.TEXT,  30f, SwingConstants.LEFT);
-        sValTotA  = lbl("—*/.", Theme.TEXT_AREA_TEXT, 30f, SwingConstants.RIGHT);
-        sValPosA  = lbl("—*/.",         Theme.TEXT_AREA_TEXT, 18f, SwingConstants.RIGHT);
+        sValTotA  = lbl(" */.", Theme.TEXT_AREA_TEXT, 30f, SwingConstants.RIGHT);
+        sValPosA  = lbl(" */.",         Theme.TEXT_AREA_TEXT, 18f, SwingConstants.RIGHT);
         sNamePosA = lbl("- Positive", Theme.SUCCESS,  18f, SwingConstants.LEFT);
         sNameNeuA = lbl("- Neutral",  Theme.SUBTEXT,  18f, SwingConstants.LEFT);
-        sValNeuA  = lbl("—*/.",         Theme.TEXT_AREA_TEXT, 18f, SwingConstants.RIGHT);
+        sValNeuA  = lbl(" */.",         Theme.TEXT_AREA_TEXT, 18f, SwingConstants.RIGHT);
         sNameNegA = lbl("- Negative", Theme.NEGATIVE, 18f, SwingConstants.LEFT);
-        sValNegA  = lbl("—*/.",         Theme.TEXT_AREA_TEXT, 18f, SwingConstants.RIGHT);
+        sValNegA  = lbl(" */.",         Theme.TEXT_AREA_TEXT, 18f, SwingConstants.RIGHT);
 
         sNameTotB = lbl("Total ", Theme.TEXT,  30f, SwingConstants.LEFT);
-        sValTotB  = lbl("—*/.", Theme.TEXT_AREA_TEXT, 30f, SwingConstants.RIGHT);
+        sValTotB  = lbl(" */.", Theme.TEXT_AREA_TEXT, 30f, SwingConstants.RIGHT);
         sNamePosB = lbl("- Positive", Theme.SUCCESS,  18f, SwingConstants.LEFT);
-        sValPosB = lbl("—*/.",         Theme.TEXT_AREA_TEXT, 18f, SwingConstants.RIGHT);
+        sValPosB = lbl(" */.",         Theme.TEXT_AREA_TEXT, 18f, SwingConstants.RIGHT);
         sNameNeuB = lbl("- Neutral",  Theme.SUBTEXT,  18f, SwingConstants.LEFT);
-        sValNeuB = lbl("—*/.",         Theme.TEXT_AREA_TEXT, 18f, SwingConstants.RIGHT);
+        sValNeuB = lbl(" */.",         Theme.TEXT_AREA_TEXT, 18f, SwingConstants.RIGHT);
         sNameNegB = lbl("- Negative", Theme.NEGATIVE, 18f, SwingConstants.LEFT);
-        sValNegB = lbl("—*/.",         Theme.TEXT_AREA_TEXT, 18f, SwingConstants.RIGHT);
+        sValNegB = lbl(" */.",         Theme.TEXT_AREA_TEXT, 18f, SwingConstants.RIGHT);
 
 
         sentCardA.add(sNameTotA); sentCardA.add(sValTotA);

@@ -102,13 +102,13 @@ public class Metrics {
         }
 
         double positivePercent =
-                (double) positiveCount / sentimentWordCount;
+                (double) positiveCount / Math.abs(sentimentWordCount);
 
         double neutralPercent =
-                (double) neutralCount / sentimentWordCount;
+                (double) neutralCount / Math.abs(sentimentWordCount);
 
         double negativePercent =
-                (double) negativeCount / sentimentWordCount;
+                (double) negativeCount / Math.abs(sentimentWordCount);
 
         return Arrays.asList(
                 totalScore,

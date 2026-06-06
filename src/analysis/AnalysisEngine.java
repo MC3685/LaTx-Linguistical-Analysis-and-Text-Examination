@@ -37,6 +37,12 @@ public class AnalysisEngine {
         TextProfile profile = new TextProfile();
 
         List<String> words = Tokenizer.words(text);
+        for (String word : words) {
+            profile.wordFreq.put(
+                    word,
+                    profile.wordFreq.getOrDefault(word, 0) + 1
+            );
+        }
 
         String[] sentences = Tokenizer.sentences(text);
 
