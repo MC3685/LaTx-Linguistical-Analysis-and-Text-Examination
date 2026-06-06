@@ -130,31 +130,30 @@ public class ResultsPanel extends JPanel {
 
         String[] statsA = {
             String.valueOf(profileA.wordCount),
-            String.valueOf(profileA.wordCount / Math.max(1, profileA.avgSentenceLength)),
+            String.valueOf((int)(profileA.wordCount / Math.max(1, profileA.avgSentenceLength))),
             String.valueOf((int)(profileA.wordCount * profileA.avgWordLength)),
             String.format("%.1f */.", profileA.punctuationDensity * 100),
             String.format("%.1f", profileA.avgSentenceLength),
-            String.format("%.1f", profileA.avgWordLength)
-        };
+            String.format("%.1f", profileA.avgWordLength)};
 
         String[] statsB = {
             String.valueOf(profileB.wordCount),
-            String.valueOf(profileB.wordCount / Math.max(1, profileB.avgSentenceLength)),
+            String.valueOf((int)(profileB.wordCount / Math.max(1, profileB.avgSentenceLength))),
             String.valueOf((int)(profileB.wordCount * profileB.avgWordLength)),
             String.format("%.1f */.", profileB.punctuationDensity * 100),
             String.format("%.1f", profileB.avgSentenceLength),
             String.format("%.1f", profileB.avgWordLength)
         };
 
-        sValTotA.setText(String.format("%.1f%%", profileA.Sentiment.get(0) * 100));
-        sValPosA.setText(String.format("%.1f%%", profileA.Sentiment.get(1) * 100));
-        sValNeuA.setText(String.format("%.1f%%", profileA.Sentiment.get(2) * 100));
-        sValNegA.setText(String.format("%.1f%%", profileA.Sentiment.get(3) * 100));
+        sValTotA.setText(String.format("%d*/.", (int)((profileA.Sentiment.get(0) * 100))));
+        sValPosA.setText(String.format("%d*/.", (int)(profileA.Sentiment.get(1) * 100)));
+        sValNeuA.setText(String.format("%d*/.", (int)(profileA.Sentiment.get(2) * 100)));
+        sValNegA.setText(String.format("%d*/.", (int)(profileA.Sentiment.get(3) * 100)));
 
-        sValTotB.setText(String.format("%.1f%%", profileB.Sentiment.get(0) * 100));
-        sValPosB.setText(String.format("%.1f%%", profileB.Sentiment.get(1) * 100));
-        sValNeuB.setText(String.format("%.1f%%", profileB.Sentiment.get(2) * 100));
-        sValNegB.setText(String.format("%.1f%%", profileB.Sentiment.get(3) * 100));
+        sValTotB.setText(String.format("%d*/.", (int)((profileB.Sentiment.get(0) * 100))));
+        sValPosB.setText(String.format("%d*/.", (int)(profileB.Sentiment.get(1) * 100)));
+        sValNeuB.setText(String.format("%d*/.", (int)(profileB.Sentiment.get(2) * 100)));
+        sValNegB.setText(String.format("%d*/.", (int)(profileB.Sentiment.get(3) * 100)));
 
         for (int i = 0; i < 6; i++) {
             statValA[i].setText(statsA[i]);
@@ -165,8 +164,8 @@ public class ResultsPanel extends JPanel {
         Object[][] topWords = result.getTopWords();
         for (int i = 0; i < 10; i++) {
             if (i < topWords.length) {
-                wordTextA[i].setText((String) topWords[i][0] + " (" + topWords[i][1] + ")");
-                wordTextB[i].setText((String) topWords[i][0] + " (" + topWords[i][2] + ")");
+                wordTextA[i].setText((String) topWords[i][0] + "   - " + topWords[i][1] + " uses");
+                wordTextB[i].setText((String) topWords[i][0] + "   - " + topWords[i][2] + " uses");
             } else {
                 wordTextA[i].setText("—");
                 wordTextB[i].setText("—");
@@ -274,9 +273,9 @@ public class ResultsPanel extends JPanel {
         contentPanel.add(wordsCardA);
         contentPanel.add(wordsCardB);
         for (int i = 0; i < 10; i++) {
-            wordRankA[i] = lbl(String.valueOf(i + 1), Theme.ACCENT_PURPLE, 13f, SwingConstants.RIGHT);
+            wordRankA[i] = lbl((i + 1) + ".", Theme.ACCENT_PURPLE, 13f, SwingConstants.RIGHT);
+            wordRankB[i] = lbl((i + 1) + ".", Theme.ACCENT_PURPLE, 13f, SwingConstants.RIGHT);
             wordTextA[i] = lbl("—",                  Theme.TEXT_AREA_TEXT, 14f, SwingConstants.LEFT);
-            wordRankB[i] = lbl(String.valueOf(i + 1), Theme.ACCENT_PURPLE, 13f, SwingConstants.RIGHT);
             wordTextB[i] = lbl("—",                  Theme.TEXT_AREA_TEXT, 14f, SwingConstants.LEFT);
             wordsCardA.add(wordRankA[i]); wordsCardA.add(wordTextA[i]);
             wordsCardB.add(wordRankB[i]); wordsCardB.add(wordTextB[i]);
@@ -405,10 +404,10 @@ public class ResultsPanel extends JPanel {
         int wRowH = Math.max(1, (wH - 38) / 10);
         for (int i = 0; i < 10; i++) {
             int ry = 36 + i * wRowH;
-            wordRankA[i].setBounds(p,       ry, 22,               wRowH);
-            wordTextA[i].setBounds(p + 24,  ry, cardW - p - 26,  wRowH);
-            wordRankB[i].setBounds(p,       ry, 22,               wRowH);
-            wordTextB[i].setBounds(p + 24,  ry, cardW - p - 26,  wRowH);
+            wordRankA[i].setBounds(p,       ry, 35,               wRowH);
+            wordTextA[i].setBounds(p + 45,  ry, cardW - p- 45,  wRowH);
+            wordRankB[i].setBounds(p,       ry, 35,               wRowH);
+            wordTextB[i].setBounds(p + 45,  ry, cardW - p - 45,  wRowH);
         }
 
 
@@ -417,7 +416,7 @@ public class ResultsPanel extends JPanel {
         JLabel[] snB = {sNameTotB, sNamePosB, sNameNeuB, sNameNegB};
         JLabel[] svB = {sValTotB, sValPosB,  sValNeuB,  sValNegB };
         int seRowH = Math.max(1, (seH - 38) / 4);
-        int two3      = cardW * 2 / 3;
+        int two3 = cardW * 3 / 5;
         for (int i = 0; i < 4; i++) {
             int ry = 36 + i * seRowH;
             snA[i].setBounds(p,      ry, two3 - p,            seRowH);

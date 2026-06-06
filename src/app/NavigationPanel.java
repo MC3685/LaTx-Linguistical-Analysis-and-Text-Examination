@@ -2,7 +2,7 @@ package app;
 
 import javax.swing.*;
 import java.awt.*;
-import java.net.URI;
+//import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import components.FontLoader;

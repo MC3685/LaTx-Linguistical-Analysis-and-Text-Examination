@@ -36,7 +36,8 @@ public class Metrics {
             words += s.trim().split("\\s+").length;
         }
 
-        return (double) words / sentences.length;
+        int i = (int) (words / sentences.length);
+        return i;
     }
 
     public static List<Double> calculateSentiment(List<String> words) {
@@ -111,7 +112,7 @@ public class Metrics {
                 (double) negativeCount / Math.abs(sentimentWordCount);
 
         return Arrays.asList(
-                totalScore,
+                Math.abs(totalScore),
                 positivePercent,
                 neutralPercent,
                 negativePercent
