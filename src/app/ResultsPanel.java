@@ -145,15 +145,15 @@ public class ResultsPanel extends JPanel {
             String.format("%.1f", profileB.avgWordLength)
         };
 
-        sValTotA.setText(String.format("%.1f%%", profileA.Sentiment.get(0) * 100));
-        sValPosA.setText(String.format("%.1f%%", profileA.Sentiment.get(1) * 100));
-        sValNeuA.setText(String.format("%.1f%%", profileA.Sentiment.get(2) * 100));
-        sValNegA.setText(String.format("%.1f%%", profileA.Sentiment.get(3) * 100));
+        sValTotA.setText(String.format("%.1f*/.", profileA.Sentiment.get(0) * 100));
+        sValPosA.setText(String.format("%.1f*/.", profileA.Sentiment.get(1) * 100));
+        sValNeuA.setText(String.format("%.1f*/.", profileA.Sentiment.get(2) * 100));
+        sValNegA.setText(String.format("%.1f*/.", profileA.Sentiment.get(3) * 100));
 
-        sValTotB.setText(String.format("%.1f%%", profileB.Sentiment.get(0) * 100));
-        sValPosB.setText(String.format("%.1f%%", profileB.Sentiment.get(1) * 100));
-        sValNeuB.setText(String.format("%.1f%%", profileB.Sentiment.get(2) * 100));
-        sValNegB.setText(String.format("%.1f%%", profileB.Sentiment.get(3) * 100));
+        sValTotB.setText(String.format("%.1f*/.", profileB.Sentiment.get(0) * 100));
+        sValPosB.setText(String.format("%.1f*/.", profileB.Sentiment.get(1) * 100));
+        sValNeuB.setText(String.format("%.1f*/.", profileB.Sentiment.get(2) * 100));
+        sValNegB.setText(String.format("%.1f*/.", profileB.Sentiment.get(3) * 100));
 
         for (int i = 0; i < 6; i++) {
             statValA[i].setText(statsA[i]);
@@ -281,8 +281,8 @@ public class ResultsPanel extends JPanel {
             wordsCardB.add(wordRankB[i]); wordsCardB.add(wordTextB[i]);
         }
 
-        sentCardA = glassCard("TONE");
-        sentCardB = glassCard("TONE");
+        sentCardA = glassCard("TONE AND SENTIMENT");
+        sentCardB = glassCard("TONE AND SENTIMENT");
         contentPanel.add(sentCardA);
         contentPanel.add(sentCardB);
 
