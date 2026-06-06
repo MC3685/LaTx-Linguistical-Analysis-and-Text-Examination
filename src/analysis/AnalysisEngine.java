@@ -53,6 +53,8 @@ public class AnalysisEngine {
 
         profile.lexicalDiversity = Metrics.lexicalDiversity(words);
 
+        profile.Sentiment = Metrics.calculateSentiment(words);
+
         profile.commas = count(text, ',');
 
         profile.semicolons = count(text, ';');

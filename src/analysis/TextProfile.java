@@ -34,7 +34,7 @@ public class TextProfile {
 
     public List<Integer> sentenceLengths = new ArrayList<>();
 
-    public double Sentiment;
+    public List<Double> Sentiment;
 
 
 

@@ -22,12 +22,11 @@ public class AnalysisResult {
     public double getSimilarity() { return similarity; }
     public TextProfile getProfileA() { return profileA; }
     public TextProfile getProfileB() { return profileB; }
-    public String getConclusion() { return "Hi"; }
+    public String getConclusion() {
 
-    /**
-     * Extracts the top 10 most frequent words across both text profiles
-     * and formats them into a 2D matrix for the UI table.
-     */
+        return "Awaiting Conclusion";
+    }
+
     public Object[][] getTopWords() {
         // Direct access to public wordFreq fields
         Map<String, Integer> freqA = (profileA != null) ? profileA.wordFreq : null;

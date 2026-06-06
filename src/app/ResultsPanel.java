@@ -44,8 +44,8 @@ public class ResultsPanel extends JPanel {
     private final JLabel[] wordRankB = new JLabel[10];
     private final JLabel[] wordTextB = new JLabel[10];
 
-    private JLabel sNamePosA, sValPosA, sNameNeuA, sValNeuA, sNameNegA, sValNegA;
-    private JLabel sNamePosB, sValPosB, sNameNeuB, sValNeuB, sNameNegB, sValNegB;
+    private JLabel sNamePosA, sValPosA, sNameNeuA, sValNeuA, sNameNegA, sValNegA, sNameTotA, sValTotA;
+    private JLabel sNamePosB, sValPosB, sNameNeuB, sValNeuB, sNameNegB, sValNegB, sNameTotB, sValTotB;
 
     private JLabel conchTextA, conchTextB; //conclusion A and B
 
@@ -61,10 +61,63 @@ public class ResultsPanel extends JPanel {
     }
 
     public void applyTheme() {
+        // Update container-level colors
         setBackground(Theme.BACKGROUND);
-        title.setForeground(Theme.TITLE);
+
+        // Title
+        if (title != null) title.setForeground(Theme.TITLE);
+
+        // Update every label according to its semantic role
+        updateThemeLabels();
+
+        // repaint to pick up theme-driven painting (cards, backgrounds, etc.)
         contentPanel.repaint();
         repaint();
+    }
+
+    private void updateThemeLabels() {
+        // Column headers
+        if (colHeaderA != null) colHeaderA.setForeground(Theme.CARD_LABEL);
+        if (colHeaderB != null) colHeaderB.setForeground(Theme.CARD_LABEL);
+
+        // Statistics labels
+        for (int i = 0; i < 6; i++) {
+            if (statNameA[i] != null) statNameA[i].setForeground(Theme.SUBTEXT);
+            if (statValA[i]  != null) statValA[i].setForeground(Theme.TEXT_AREA_TEXT);
+            if (statNameB[i] != null) statNameB[i].setForeground(Theme.SUBTEXT);
+            if (statValB[i]  != null) statValB[i].setForeground(Theme.TEXT_AREA_TEXT);
+        }
+
+        // Top words
+        for (int i = 0; i < 10; i++) {
+            if (wordRankA[i] != null) wordRankA[i].setForeground(Theme.ACCENT_PURPLE);
+            if (wordTextA[i] != null) wordTextA[i].setForeground(Theme.TEXT_AREA_TEXT);
+            if (wordRankB[i] != null) wordRankB[i].setForeground(Theme.ACCENT_PURPLE);
+            if (wordTextB[i] != null) wordTextB[i].setForeground(Theme.TEXT_AREA_TEXT);
+        }
+
+        // Tone (A)
+        if (sNamePosA != null) sNamePosA.setForeground(Theme.SUCCESS);
+        if (sValPosA  != null) sValPosA.setForeground(Theme.TEXT_AREA_TEXT);
+        if (sNameNeuA != null) sNameNeuA.setForeground(Theme.SUBTEXT);
+        if (sValNeuA  != null) sValNeuA.setForeground(Theme.TEXT_AREA_TEXT);
+        if (sNameNegA != null) sNameNegA.setForeground(Theme.NEGATIVE);
+        if (sValNegA  != null) sValNegA.setForeground(Theme.TEXT_AREA_TEXT);
+
+        // Tone (B)
+        if (sNamePosB != null) sNamePosB.setForeground(Theme.SUCCESS);
+        if (sValPosB  != null) sValPosB.setForeground(Theme.TEXT_AREA_TEXT);
+        if (sNameNeuB != null) sNameNeuB.setForeground(Theme.SUBTEXT);
+        if (sValNeuB  != null) sValNeuB.setForeground(Theme.TEXT_AREA_TEXT);
+        if (sNameNegB != null) sNameNegB.setForeground(Theme.NEGATIVE);
+        if (sValNegB  != null) sValNegB.setForeground(Theme.TEXT_AREA_TEXT);
+
+        // Conclusion texts
+        if (conchTextA != null) conchTextA.setForeground(Theme.TEXT);
+        if (conchTextB != null) conchTextB.setForeground(Theme.TEXT);
+
+        // Score panel may need its own theme handling if implemented
+        if (scorePanel != null) scorePanel.setForeground(Theme.ACCENT_PURPLE);
     }
 
     public void updateResults(AnalysisResult result) {
@@ -91,6 +144,16 @@ public class ResultsPanel extends JPanel {
             String.format("%.1f", profileB.avgSentenceLength),
             String.format("%.1f", profileB.avgWordLength)
         };
+
+        sValTotA.setText(String.format("%.1f%%", profileA.Sentiment.get(0) * 100));
+        sValPosA.setText(String.format("%.1f%%", profileA.Sentiment.get(1) * 100));
+        sValNeuA.setText(String.format("%.1f%%", profileA.Sentiment.get(2) * 100));
+        sValNegA.setText(String.format("%.1f%%", profileA.Sentiment.get(3) * 100));
+
+        sValTotB.setText(String.format("%.1f%%", profileB.Sentiment.get(0) * 100));
+        sValPosB.setText(String.format("%.1f%%", profileB.Sentiment.get(1) * 100));
+        sValNeuB.setText(String.format("%.1f%%", profileB.Sentiment.get(2) * 100));
+        sValNegB.setText(String.format("%.1f%%", profileB.Sentiment.get(3) * 100));
 
         for (int i = 0; i < 6; i++) {
             statValA[i].setText(statsA[i]);
@@ -223,22 +286,31 @@ public class ResultsPanel extends JPanel {
         contentPanel.add(sentCardA);
         contentPanel.add(sentCardB);
 
-        sNamePosA = lbl("- Positive", Theme.SUCCESS,  18f, SwingConstants.LEFT);
+        sNameTotA = lbl("Total ", Theme.TEXT,  30f, SwingConstants.LEFT);
+        sValTotA  = lbl("—*/.", Theme.TEXT_AREA_TEXT, 30f, SwingConstants.RIGHT);
         sValPosA  = lbl("—*/.",         Theme.TEXT_AREA_TEXT, 18f, SwingConstants.RIGHT);
+        sNamePosA = lbl("- Positive", Theme.SUCCESS,  18f, SwingConstants.LEFT);
         sNameNeuA = lbl("- Neutral",  Theme.SUBTEXT,  18f, SwingConstants.LEFT);
         sValNeuA  = lbl("—*/.",         Theme.TEXT_AREA_TEXT, 18f, SwingConstants.RIGHT);
         sNameNegA = lbl("- Negative", Theme.NEGATIVE, 18f, SwingConstants.LEFT);
         sValNegA  = lbl("—*/.",         Theme.TEXT_AREA_TEXT, 18f, SwingConstants.RIGHT);
+
+        sNameTotB = lbl("Total ", Theme.TEXT,  30f, SwingConstants.LEFT);
+        sValTotB  = lbl("—*/.", Theme.TEXT_AREA_TEXT, 30f, SwingConstants.RIGHT);
+        sNamePosB = lbl("- Positive", Theme.SUCCESS,  18f, SwingConstants.LEFT);
+        sValPosB = lbl("—*/.",         Theme.TEXT_AREA_TEXT, 18f, SwingConstants.RIGHT);
+        sNameNeuB = lbl("- Neutral",  Theme.SUBTEXT,  18f, SwingConstants.LEFT);
+        sValNeuB = lbl("—*/.",         Theme.TEXT_AREA_TEXT, 18f, SwingConstants.RIGHT);
+        sNameNegB = lbl("- Negative", Theme.NEGATIVE, 18f, SwingConstants.LEFT);
+        sValNegB = lbl("—*/.",         Theme.TEXT_AREA_TEXT, 18f, SwingConstants.RIGHT);
+
+
+        sentCardA.add(sNameTotA); sentCardA.add(sValTotA);
         sentCardA.add(sNamePosA); sentCardA.add(sValPosA);
         sentCardA.add(sNameNeuA); sentCardA.add(sValNeuA);
         sentCardA.add(sNameNegA); sentCardA.add(sValNegA);
 
-        sNamePosB = lbl("● Positive", Theme.SUCCESS,  18f, SwingConstants.LEFT);
-        sValPosB  = lbl("—*/.",         Theme.TEXT_AREA_TEXT, 18f, SwingConstants.RIGHT);
-        sNameNeuB = lbl("● Neutral",  Theme.SUBTEXT,  18f, SwingConstants.LEFT);
-        sValNeuB  = lbl("—*/.",         Theme.TEXT_AREA_TEXT, 18f, SwingConstants.RIGHT);
-        sNameNegB = lbl("● Negative", Theme.NEGATIVE, 18f, SwingConstants.LEFT);
-        sValNegB  = lbl("—*/.",         Theme.TEXT_AREA_TEXT, 18f, SwingConstants.RIGHT);
+        sentCardB.add(sNameTotB); sentCardB.add(sValTotB);
         sentCardB.add(sNamePosB); sentCardB.add(sValPosB);
         sentCardB.add(sNameNeuB); sentCardB.add(sValNeuB);
         sentCardB.add(sNameNegB); sentCardB.add(sValNegB);
@@ -248,9 +320,8 @@ public class ResultsPanel extends JPanel {
         contentPanel.add(conchCardA);
         contentPanel.add(conchCardB);
 
-        conchTextA = lbl("Awaiting analysis…", Theme.TEXT_AREA_TEXT, 13f, SwingConstants.LEFT);
+        conchTextA = lbl("Awaiting analysis…", Theme.TEXT, 13f, SwingConstants.LEFT);
         conchTextB = lbl("Awaiting analysis…", Theme.TEXT, 13f, SwingConstants.LEFT);
-        conchTextB.setForeground(Theme.TEXT_AREA_TEXT);
 
 
         conchTextA.setVerticalAlignment(SwingConstants.TOP);
@@ -262,6 +333,9 @@ public class ResultsPanel extends JPanel {
         scorePanel = new CircularScorePanel();
         scoreCard.add(scorePanel);
         contentPanel.add(scoreCard);
+
+        // Ensure labels reflect the current theme after build
+        updateThemeLabels();
 
         scrollPane = createStyledScroll(contentPanel);
         scrollPane.setOpaque(false);
@@ -289,7 +363,7 @@ public class ResultsPanel extends JPanel {
 
         int sH  = 180;
         int wH  = 330;
-        int seH = 150;
+        int seH = 200;
         int cH  = 200;
         int scH = 300;
 
@@ -337,13 +411,13 @@ public class ResultsPanel extends JPanel {
         }
 
 
-        JLabel[] snA = {sNamePosA, sNameNeuA, sNameNegA};
-        JLabel[] svA = {sValPosA,  sValNeuA,  sValNegA };
-        JLabel[] snB = {sNamePosB, sNameNeuB, sNameNegB};
-        JLabel[] svB = {sValPosB,  sValNeuB,  sValNegB };
-        int seRowH    = Math.max(1, (seH - 38) / 3);
+        JLabel[] snA = {sNameTotA, sNamePosA, sNameNeuA, sNameNegA};
+        JLabel[] svA = {sValTotA, sValPosA,  sValNeuA,  sValNegA };
+        JLabel[] snB = {sNameTotB, sNamePosB, sNameNeuB, sNameNegB};
+        JLabel[] svB = {sValTotB, sValPosB,  sValNeuB,  sValNegB };
+        int seRowH = Math.max(1, (seH - 38) / 4);
         int two3      = cardW * 2 / 3;
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             int ry = 36 + i * seRowH;
             snA[i].setBounds(p,      ry, two3 - p,            seRowH);
             svA[i].setBounds(two3,   ry, cardW - two3 - p,   seRowH);
@@ -489,5 +563,3 @@ public class ResultsPanel extends JPanel {
         }
     }
 }
-
-
