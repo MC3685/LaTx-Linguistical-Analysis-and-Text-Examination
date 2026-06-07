@@ -36,7 +36,8 @@ public class Metrics {
             words += s.trim().split("\\s+").length;
         }
 
-        return (double) words / sentences.length;
+        int i = (int) (words / sentences.length);
+        return i;
     }
 
     public static List<Double> calculateSentiment(List<String> words) {

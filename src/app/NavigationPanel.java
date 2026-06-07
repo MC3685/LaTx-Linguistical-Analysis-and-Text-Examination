@@ -2,7 +2,7 @@ package app;
 
 import javax.swing.*;
 import java.awt.*;
-import java.net.URI;
+//import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import components.FontLoader;
@@ -108,7 +108,8 @@ public class NavigationPanel extends JPanel {
         instructionsArea = new JTextArea(
                 " Instructions:\n\n" +
                 " 1) How to Navigate Home\n" +
-                "       Type or copy paste any two pieces of text you would like\n" +
+                "       Type or copy paste any two pieces of text you would like(they should\n" +
+                "        have at least 200 words to give an accurate result)\n" +
                 "       Or add a .txt file by clicking the add file buttons below the text field\n\n" +
                 " 2) How to Navigate Reports\n" +
                 "       Statistics - gives you the number of each property that is used in to\n" +
@@ -124,7 +125,7 @@ public class NavigationPanel extends JPanel {
                 "       Click the exit button to close the application\n\n"  +
                 " Source and Exit\n"   +
                 "       Click the source button to view our code on GitHub!\n"  +
-                "       Another exit button for easier access for you!"
+                "       Another exit button for easier access for you!\n"
 
         );
         instructionsArea.setEditable(false);

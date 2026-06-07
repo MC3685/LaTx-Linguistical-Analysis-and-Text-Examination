@@ -33,9 +33,6 @@ public class HomePanel extends JPanel {
     private JPanel cardA;
     private JPanel cardB;
 
-    JLabel LabelA = new JLabel("No file selected");
-    JLabel LabelB = new JLabel("No file selected");
-
     private JLabel subtitle;
     private JLabel lbl;
 

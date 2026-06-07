@@ -24,7 +24,37 @@ public class AnalysisResult {
     public TextProfile getProfileB() { return profileB; }
     public String getConclusion() {
 
-        return "Awaiting Conclusion";
+        String authorResult =
+                similarity >= 70
+                        ? "likely written by the same author"
+                        : "likely written by different authors";
+
+        return String.format(
+                "<html>" +
+                        "Overall similarity: <b>%.1f%%</b>.<br><br>" +
+
+                        "Text A averages %.1f words per sentence, while Text B averages %.1f.<br>" +
+
+                        "Vocabulary diversity is %.1f%% in Text A and %.1f%% in Text B.<br>" +
+
+                        "Punctuation density is %.1f%% in Text A and %.1f%% in Text B.<br><br>" +
+
+                        "Based on these writing characteristics, the texts are %s." +
+                        "</html>",
+
+                similarity,
+
+                profileA.avgSentenceLength,
+                profileB.avgSentenceLength,
+
+                profileA.lexicalDiversity * 100,
+                profileB.lexicalDiversity * 100,
+
+                profileA.punctuationDensity * 100,
+                profileB.punctuationDensity * 100,
+
+                authorResult
+        );
     }
 
     public Object[][] getTopWords() {
