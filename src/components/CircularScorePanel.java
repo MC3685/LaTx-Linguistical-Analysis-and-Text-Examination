@@ -4,13 +4,16 @@ import app.Theme;
 import javax.swing.*;
 import java.awt.*;
 
+
 public class CircularScorePanel extends JPanel {
 
     private double score = 1;
+    private static Color track_color;
 
     public CircularScorePanel() {
 
         setOpaque(false);
+        track_color = Theme.GRAPH_BACKGROUND;
     }
 
     public void setScore(double score) {
@@ -33,7 +36,7 @@ public class CircularScorePanel extends JPanel {
         int y = (getHeight()-size)/2;
 
         g2.setStroke(new BasicStroke(14f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-        g2.setColor(new Color(50,50,70));
+        g2.setColor(track_color);
         g2.drawArc(x, y, size, size, 0, 360);
         GradientPaint gp = new GradientPaint(x, y, Theme.PURPLE, x+size, y+size, Theme.BLUE);
         g2.setPaint(gp);
@@ -48,5 +51,11 @@ public class CircularScorePanel extends JPanel {
 
         FontMetrics fm = g2.getFontMetrics();
         g2.drawString(txt, getWidth()/2-fm.stringWidth(txt)/2, getHeight()/2+15);
+
     }
+    public void applyTheme()
+    {
+        track_color = Theme.GRAPH_BACKGROUND;
+    }
+
 }

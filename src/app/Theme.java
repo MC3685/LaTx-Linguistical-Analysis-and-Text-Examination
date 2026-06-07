@@ -71,6 +71,8 @@ public class Theme {
 
     public static Color BUTTON_ANALYZE_GLOW;
 
+    public static Color GRAPH_BACKGROUND;
+
     // ── Semantic Status ───────────────────────────────────────────────────────
     public static Color SUCCESS;    // positive / confirmed
     public static Color NEGATIVE;   // negative / warning (e.g. sentiment, errors)
@@ -144,6 +146,7 @@ public class Theme {
         SCROLLBAR_THUMB           = new Color(130, 80,  255, 120);
         BLUE                      = new Color(50,  150, 230);
         PURPLE                    = new Color(148, 98,  255);
+        GRAPH_BACKGROUND          = new Color(50,50,70);
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -208,5 +211,6 @@ public class Theme {
         SCROLLBAR_THUMB           = new Color(120, 80,  230, 100);
         BLUE                      = new Color(30,  140, 220);
         PURPLE                    = new Color(120, 80,  230);
+        GRAPH_BACKGROUND          = new Color(220,220,220);
     }
 }

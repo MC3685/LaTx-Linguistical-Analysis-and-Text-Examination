@@ -112,7 +112,7 @@ public class Metrics {
                 (double) negativeCount / Math.abs(sentimentWordCount);
 
         return Arrays.asList(
-                Math.abs(totalScore),
+                totalScore,
                 positivePercent,
                 neutralPercent,
                 negativePercent

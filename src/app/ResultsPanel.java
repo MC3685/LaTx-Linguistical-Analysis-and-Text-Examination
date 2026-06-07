@@ -3,6 +3,8 @@ package app;
 import components.*;
 import analysis.AnalysisResult;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.*;
 import javax.swing.border.AbstractBorder;
 import java.awt.*;
@@ -65,6 +67,8 @@ public class ResultsPanel extends JPanel {
         // Update container-level colors
         setBackground(Theme.BACKGROUND);
 
+        scorePanel.applyTheme();
+
         // Title
         if (title != null) title.setForeground(Theme.TITLE);
 
@@ -98,6 +102,7 @@ public class ResultsPanel extends JPanel {
         }
 
         // Tone (A)
+        if(sNameTotA != null) sNameTotA.setForeground((Theme.TEXT));
         if (sNamePosA != null) sNamePosA.setForeground(Theme.SUCCESS);
         if (sValPosA  != null) sValPosA.setForeground(Theme.TEXT_AREA_TEXT);
         if (sNameNeuA != null) sNameNeuA.setForeground(Theme.SUBTEXT);
@@ -106,6 +111,7 @@ public class ResultsPanel extends JPanel {
         if (sValNegA  != null) sValNegA.setForeground(Theme.TEXT_AREA_TEXT);
 
         // Tone (B)
+        if(sNameTotB != null) sNameTotB.setForeground((Theme.TEXT));
         if (sNamePosB != null) sNamePosB.setForeground(Theme.SUCCESS);
         if (sValPosB  != null) sValPosB.setForeground(Theme.TEXT_AREA_TEXT);
         if (sNameNeuB != null) sNameNeuB.setForeground(Theme.SUBTEXT);
@@ -145,15 +151,41 @@ public class ResultsPanel extends JPanel {
             String.format("%.1f", profileB.avgWordLength)
         };
 
-        sValTotA.setText(String.format("%d*/.", (int)((profileA.Sentiment.get(0) * 100))));
+        //sValTotA.setText(String.format("%.0f",(profileA.Sentiment.get(0))));
         sValPosA.setText(String.format("%d*/.", (int)(profileA.Sentiment.get(1) * 100)));
         sValNeuA.setText(String.format("%d*/.", (int)(profileA.Sentiment.get(2) * 100)));
         sValNegA.setText(String.format("%d*/.", (int)(profileA.Sentiment.get(3) * 100)));
 
-        sValTotB.setText(String.format("%d*/.", (int)((profileB.Sentiment.get(0) * 100))));
+        //sValTotB.setText(String.format("%.0f", (profileB.Sentiment.get(0))));
         sValPosB.setText(String.format("%d*/.", (int)(profileB.Sentiment.get(1) * 100)));
         sValNeuB.setText(String.format("%d*/.", (int)(profileB.Sentiment.get(2) * 100)));
         sValNegB.setText(String.format("%d*/.", (int)(profileB.Sentiment.get(3) * 100)));
+
+        if(profileB.Sentiment.getFirst() > 0)
+        {
+            sValTotB.setText("Positive");
+        }
+        else if(profileB.Sentiment.getFirst() == 0)
+        {
+            sValTotB.setText("Neutral");
+        }
+        else
+        {
+            sValTotB.setText("Negative");
+        }
+
+        if(profileA.Sentiment.getFirst() > 0)
+        {
+            sValTotA.setText("Positive");
+        }
+        else if(profileA.Sentiment.getFirst() == 0)
+        {
+            sValTotA.setText("Neutral");
+        }
+        else
+        {
+            sValTotA.setText("Negative");
+        }
 
         for (int i = 0; i < 6; i++) {
             statValA[i].setText(statsA[i]);
@@ -162,15 +194,45 @@ public class ResultsPanel extends JPanel {
 
         // Update top 10 words
         Object[][] topWords = result.getTopWords();
+
+        List<Object[]> sortedA = new ArrayList<>();
+        List<Object[]> sortedB = new ArrayList<>();
+
+        for (Object[] row : topWords) {
+            sortedA.add(row);
+            sortedB.add(row);
+        }
+        sortedA.sort((a, b) ->
+                Integer.compare(
+                        (Integer) b[1],
+                        (Integer) a[1]
+                ));
+        sortedB.sort((a, b) ->
+                Integer.compare(
+                        (Integer) b[2],
+                        (Integer) a[2]
+                ));
         for (int i = 0; i < 10; i++) {
-            if (i < topWords.length) {
-                wordTextA[i].setText((String) topWords[i][0] + "   - " + topWords[i][1] + " uses");
-                wordTextB[i].setText((String) topWords[i][0] + "   - " + topWords[i][2] + " uses");
+
+            if (i < sortedA.size()) {
+                wordTextA[i].setText(
+                        sortedA.get(i)[0] + "   - " +
+                                sortedA.get(i)[1] + " uses"
+                );
             } else {
                 wordTextA[i].setText("—");
+            }
+
+            if (i < sortedB.size()) {
+                wordTextB[i].setText(
+                        sortedB.get(i)[0] + "   - " +
+                                sortedB.get(i)[2] + " uses"
+                );
+            } else {
                 wordTextB[i].setText("—");
             }
         }
+
 
         // Update conclusion
         conchTextA.setText(result.getConclusion());
@@ -247,8 +309,8 @@ public class ResultsPanel extends JPanel {
         title.setForeground(Theme.TITLE);
         contentPanel.add(title);
 
-        colHeaderA = lbl("TEXT  A", Theme.CARD_LABEL, 13f, SwingConstants.CENTER);
-        colHeaderB = lbl("TEXT  B", Theme.CARD_LABEL, 13f, SwingConstants.CENTER);
+        colHeaderA = lbl("TEXT  A", HKModular, Theme.CARD_LABEL, 13f, SwingConstants.CENTER);
+        colHeaderB = lbl("TEXT  B", HKModular, Theme.CARD_LABEL, 13f, SwingConstants.CENTER);
         // Letter-spacing via HTML (same trick used in HomePanel card labels)
         colHeaderA.setText("<html><body style='letter-spacing:4px'>TEXT A</body></html>");
         colHeaderB.setText("<html><body style='letter-spacing:4px'>TEXT B</body></html>");
@@ -260,10 +322,10 @@ public class ResultsPanel extends JPanel {
         contentPanel.add(statsCardA);
         contentPanel.add(statsCardB);
         for (int i = 0; i < 6; i++) {
-            statNameA[i] = lbl(STAT_NAMES[i], Theme.SUBTEXT, 11f, SwingConstants.LEFT);
-            statValA[i]  = lbl("—",           Theme.TEXT_AREA_TEXT, 11f, SwingConstants.RIGHT);
-            statNameB[i] = lbl(STAT_NAMES[i], Theme.SUBTEXT,        11f, SwingConstants.LEFT);
-            statValB[i]  = lbl("—",           Theme.TEXT_AREA_TEXT, 11f, SwingConstants.RIGHT);
+            statNameA[i] = lbl(STAT_NAMES[i], HKModular, Theme.SUBTEXT, 11f, SwingConstants.LEFT);
+            statValA[i]  = lbl("—", HKModular, Theme.TEXT_AREA_TEXT, 11f, SwingConstants.RIGHT);
+            statNameB[i] = lbl(STAT_NAMES[i], HKModular, Theme.SUBTEXT,        11f, SwingConstants.LEFT);
+            statValB[i]  = lbl("—", HKModular, Theme.TEXT_AREA_TEXT, 11f, SwingConstants.RIGHT);
             statsCardA.add(statNameA[i]); statsCardA.add(statValA[i]);
             statsCardB.add(statNameB[i]); statsCardB.add(statValB[i]);
         }
@@ -273,10 +335,10 @@ public class ResultsPanel extends JPanel {
         contentPanel.add(wordsCardA);
         contentPanel.add(wordsCardB);
         for (int i = 0; i < 10; i++) {
-            wordRankA[i] = lbl((i + 1) + ".", Theme.ACCENT_PURPLE, 13f, SwingConstants.RIGHT);
-            wordRankB[i] = lbl((i + 1) + ".", Theme.ACCENT_PURPLE, 13f, SwingConstants.RIGHT);
-            wordTextA[i] = lbl("—",                  Theme.TEXT_AREA_TEXT, 14f, SwingConstants.LEFT);
-            wordTextB[i] = lbl("—",                  Theme.TEXT_AREA_TEXT, 14f, SwingConstants.LEFT);
+            wordRankA[i] = lbl((i + 1) + ".", HKModular, Theme.ACCENT_PURPLE, 13f, SwingConstants.RIGHT);
+            wordRankB[i] = lbl((i + 1) + ".", HKModular, Theme.ACCENT_PURPLE, 13f, SwingConstants.RIGHT);
+            wordTextA[i] = lbl("—", HKModular, Theme.TEXT_AREA_TEXT, 14f, SwingConstants.LEFT);
+            wordTextB[i] = lbl("—", HKModular, Theme.TEXT_AREA_TEXT, 14f, SwingConstants.LEFT);
             wordsCardA.add(wordRankA[i]); wordsCardA.add(wordTextA[i]);
             wordsCardB.add(wordRankB[i]); wordsCardB.add(wordTextB[i]);
         }
@@ -286,23 +348,23 @@ public class ResultsPanel extends JPanel {
         contentPanel.add(sentCardA);
         contentPanel.add(sentCardB);
 
-        sNameTotA = lbl("Total ", Theme.TEXT,  30f, SwingConstants.LEFT);
-        sValTotA  = lbl(" */.", Theme.TEXT_AREA_TEXT, 30f, SwingConstants.RIGHT);
-        sValPosA  = lbl(" */.",         Theme.TEXT_AREA_TEXT, 18f, SwingConstants.RIGHT);
-        sNamePosA = lbl("- Positive", Theme.SUCCESS,  18f, SwingConstants.LEFT);
-        sNameNeuA = lbl("- Neutral",  Theme.SUBTEXT,  18f, SwingConstants.LEFT);
-        sValNeuA  = lbl(" */.",         Theme.TEXT_AREA_TEXT, 18f, SwingConstants.RIGHT);
-        sNameNegA = lbl("- Negative", Theme.NEGATIVE, 18f, SwingConstants.LEFT);
-        sValNegA  = lbl(" */.",         Theme.TEXT_AREA_TEXT, 18f, SwingConstants.RIGHT);
+        sNameTotA = lbl("Final Tone ", HKModular, Theme.TEXT,  20f, SwingConstants.LEFT);
+        sValTotA  = lbl("-", HKModular, Theme.TEXT_AREA_TEXT, 20f, SwingConstants.RIGHT);
+        sValPosA  = lbl(" */.", HKModular, Theme.TEXT_AREA_TEXT, 18f, SwingConstants.RIGHT);
+        sNamePosA = lbl("- Positive", HKModular, Theme.SUCCESS,  18f, SwingConstants.LEFT);
+        sNameNeuA = lbl("- Neutral", HKModular, Theme.SUBTEXT,  18f, SwingConstants.LEFT);
+        sValNeuA  = lbl(" */.", HKModular, Theme.TEXT_AREA_TEXT, 18f, SwingConstants.RIGHT);
+        sNameNegA = lbl("- Negative", HKModular, Theme.NEGATIVE, 18f, SwingConstants.LEFT);
+        sValNegA  = lbl(" */.", HKModular, Theme.TEXT_AREA_TEXT, 18f, SwingConstants.RIGHT);
 
-        sNameTotB = lbl("Total ", Theme.TEXT,  30f, SwingConstants.LEFT);
-        sValTotB  = lbl(" */.", Theme.TEXT_AREA_TEXT, 30f, SwingConstants.RIGHT);
-        sNamePosB = lbl("- Positive", Theme.SUCCESS,  18f, SwingConstants.LEFT);
-        sValPosB = lbl(" */.",         Theme.TEXT_AREA_TEXT, 18f, SwingConstants.RIGHT);
-        sNameNeuB = lbl("- Neutral",  Theme.SUBTEXT,  18f, SwingConstants.LEFT);
-        sValNeuB = lbl(" */.",         Theme.TEXT_AREA_TEXT, 18f, SwingConstants.RIGHT);
-        sNameNegB = lbl("- Negative", Theme.NEGATIVE, 18f, SwingConstants.LEFT);
-        sValNegB = lbl(" */.",         Theme.TEXT_AREA_TEXT, 18f, SwingConstants.RIGHT);
+        sNameTotB = lbl("Final Tone ", HKModular, Theme.TEXT,  20f, SwingConstants.LEFT);
+        sValTotB  = lbl("-", HKModular, Theme.TEXT_AREA_TEXT, 20f, SwingConstants.RIGHT);
+        sNamePosB = lbl("- Positive", HKModular, Theme.SUCCESS,  18f, SwingConstants.LEFT);
+        sValPosB = lbl(" */.", HKModular, Theme.TEXT_AREA_TEXT, 18f, SwingConstants.RIGHT);
+        sNameNeuB = lbl("- Neutral", HKModular, Theme.SUBTEXT,  18f, SwingConstants.LEFT);
+        sValNeuB = lbl(" */.", HKModular, Theme.TEXT_AREA_TEXT, 18f, SwingConstants.RIGHT);
+        sNameNegB = lbl("- Negative", HKModular, Theme.NEGATIVE, 18f, SwingConstants.LEFT);
+        sValNegB = lbl(" */.", HKModular, Theme.TEXT_AREA_TEXT, 18f, SwingConstants.RIGHT);
 
 
         sentCardA.add(sNameTotA); sentCardA.add(sValTotA);
@@ -320,8 +382,14 @@ public class ResultsPanel extends JPanel {
         contentPanel.add(conchCardA);
         contentPanel.add(conchCardB);
 
-        conchTextA = lbl("Awaiting analysis…", Theme.TEXT, 13f, SwingConstants.LEFT);
-        conchTextB = lbl("Awaiting analysis…", Theme.TEXT, 13f, SwingConstants.LEFT);
+        //conchTextA = lbl("Awaiting analysis…", "Consolas", Theme.TEXT, 13f, SwingConstants.LEFT);
+        //conchTextB = lbl("Awaiting analysis…", Architype, Theme.TEXT, 13f, SwingConstants.LEFT);
+        conchTextA = new JLabel("Awaiting analysis…", SwingConstants.LEFT);
+        conchTextA.setForeground(Theme.TEXT);
+        conchTextA.setFont(new Font("Consolas", Font.PLAIN,  15));
+        conchTextB = new JLabel("Awaiting analysis…", SwingConstants.LEFT);
+        conchTextB.setForeground(Theme.TEXT);
+        conchTextB.setFont(new Font("Consolas", Font.PLAIN,  15));
 
 
         conchTextA.setVerticalAlignment(SwingConstants.TOP);
@@ -473,10 +541,10 @@ public class ResultsPanel extends JPanel {
         return p;
     }
 
-    private JLabel lbl(String text, Color fg, float size, int align) {
+    private JLabel lbl(String text, Font myFont, Color fg, float size, int align) {
         JLabel l = new JLabel(text, align);
         l.setForeground(fg);
-        l.setFont(f(HKModular, size));
+        l.setFont(f(myFont, size));
         return l;
     }
 
