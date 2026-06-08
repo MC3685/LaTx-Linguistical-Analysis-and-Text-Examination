@@ -9,8 +9,6 @@ public class GlowEffect {
 
     private final JComponent component;
 
-    private Color glowColor = new Color(120, 80, 255);
-    private int glowSize = 12;
     private float alpha = 0.0f;
 
     private boolean hovering = false;
@@ -18,16 +16,6 @@ public class GlowEffect {
     public GlowEffect(JComponent component) {
         this.component = component;
         install();
-    }
-
-    public GlowEffect setGlowColor(Color color) {
-        this.glowColor = color;
-        return this;
-    }
-
-    public GlowEffect setGlowSize(int size) {
-        this.glowSize = size;
-        return this;
     }
 
     private void install() {
@@ -78,33 +66,5 @@ public class GlowEffect {
             component.repaint();
 
         }).start();
-    }
-
-    public void paintGlow(Graphics2D g, JComponent c) {
-
-        if (alpha <= 0f) return;
-
-        Graphics2D g2 = (Graphics2D) g.create();
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON);
-
-        g2.setColor(new Color(
-                glowColor.getRed(),
-                glowColor.getGreen(),
-                glowColor.getBlue(),
-                (int) (alpha * 255)
-        ));
-
-        int inset = glowSize;
-        g2.fillRoundRect(
-                -inset,
-                -inset,
-                c.getWidth() + inset * 2,
-                c.getHeight() + inset * 2,
-                30,
-                30
-        );
-
-        g2.dispose();
     }
 }

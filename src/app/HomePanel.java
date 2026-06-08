@@ -1,12 +1,13 @@
 package app;
 
-import components.TitleGradient;
 import analysis.AnalysisEngine;
 import analysis.AnalysisResult;
 import components.*;
 
 import javax.swing.*;
 import javax.swing.border.AbstractBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -17,7 +18,6 @@ import java.nio.file.Files;
 public class HomePanel extends JPanel {
 
     private JPanel panel;
-    private JTextArea area;
 
     private JTextArea textA;
     private JTextArea textB;
@@ -29,6 +29,7 @@ public class HomePanel extends JPanel {
     private JButton importB;
 
     private JButton analyzeButton;
+    private JButton clearButton; // new clear button
 
     private JPanel cardA;
     private JPanel cardB;
@@ -43,6 +44,8 @@ public class HomePanel extends JPanel {
     private static final Font HKModular = FontLoader.load("HKModular-Bold.otf", 1f);
 
     private static final Font Architype = FontLoader.load("Architype-Aubette.ttf", 1f);
+
+    private static final String PLACEHOLDER = "Click to start typing, or add a file below...";
 
     public HomePanel(MainFrame frame) {
         this.frame = frame;
@@ -75,6 +78,12 @@ public class HomePanel extends JPanel {
         textB.setForeground(Theme.TEXT_AREA_TEXT);
         textB.setCaretColor(Theme.TEXT_AREA_CARET);
         textB.setSelectionColor(Theme.TEXT_AREA_SELECTION);
+
+        // ensure buttons repaint with new theme
+        if (analyzeButton != null) analyzeButton.repaint();
+        if (clearButton != null) clearButton.repaint();
+        if (importA != null) importA.repaint();
+        if (importB != null) importB.repaint();
 
         repaint();
     }
@@ -132,6 +141,7 @@ public class HomePanel extends JPanel {
 
         analyzeButton = createAnalyzeButton("RUN ANALYSIS");
         analyzeButton.setFont(HKModular.deriveFont(16f));
+        analyzeButton.setEnabled(false);
         analyzeButton.addActionListener(e -> {
             AnalysisEngine engine = new AnalysisEngine();
             AnalysisResult result = engine.analyze(textA.getText(), textB.getText());
@@ -139,9 +149,29 @@ public class HomePanel extends JPanel {
             frame.showResults();
         });
 
-        add(analyzeButton);
-    }
+        clearButton = createClearButton("CLEAR FIELDS");
+        clearButton.setFont(HKModular.deriveFont(13f));
+        clearButton.setEnabled(false);
+        clearButton.addActionListener(e -> {
+            textA.setText(PLACEHOLDER);
+            textB.setText(PLACEHOLDER);
 
+            importA.setText("ADD FILE");
+            importA.setEnabled(true);
+            importB.setText("ADD FILE");
+            importB.setEnabled(true);
+
+            updateActionButtonsState();
+        });
+
+        add(clearButton);
+        add(analyzeButton);
+
+        attachDocumentListener(textA);
+        attachDocumentListener(textB);
+
+        updateActionButtonsState();
+    }
 
     private void updateLayout() {
 
@@ -172,6 +202,11 @@ public class HomePanel extends JPanel {
         importB.setBounds(cardWidth / 2 - 110, cardHeight - 75, 220, 42);
 
         analyzeButton.setBounds(w / 2 - 160, h - 76, 320, 50);
+
+        // Clear button sits above the analyze button, centered and smaller
+        if (clearButton != null) {
+            clearButton.setBounds(w / 2 - 80, h - 76 - 12 - 36, 166, 38);
+        }
     }
 
 
@@ -220,14 +255,20 @@ public class HomePanel extends JPanel {
         area.setWrapStyleWord(true);
         area.setOpaque(false);
 
-        String placeholder = "Click to start typing, or add a file below...";
-        area.setText(placeholder);
+        area.setText(PLACEHOLDER);
 
         area.addFocusListener(new java.awt.event.FocusAdapter() {
             @Override
             public void focusGained(java.awt.event.FocusEvent e) {
-                if (area.getText().equals(placeholder)) {
+                if (area.getText().equals(PLACEHOLDER)) {
                     area.setText("");
+                }
+            }
+
+            @Override
+            public void focusLost(java.awt.event.FocusEvent e) {
+                if (area.getText().trim().isEmpty()) {
+                    area.setText(PLACEHOLDER);
                 }
             }
         });
@@ -265,21 +306,14 @@ public class HomePanel extends JPanel {
 
                 RoundRectangle2D.Float rr = new RoundRectangle2D.Float(1, 1, getWidth() - 2, getHeight() - 2, 30, 30);
 
-                if (pressed)
-                {
-                    g2.setColor(Theme.BUTTON_IMPORT_PRESSED);
+                if (pressed) {
+                    g2.setPaint(new GradientPaint(0, 0, Theme.BUTTON_IMPORT_PRESSED, 0, getHeight(), Theme.BUTTON_IMPORT_PRESSED));
                     g2.fill(rr);
-
-                }
-                else if (hover)
-                {
-                    GradientPaint gp = new GradientPaint(0, 0, Theme.BUTTON_IMPORT_GRADIENT_START, getWidth(), getHeight(), Theme.BUTTON_IMPORT_GRADIENT_END);
-                    g2.setPaint(gp);
+                } else if (hover) {
+                    g2.setPaint(new GradientPaint(0, 0, Theme.BUTTON_IMPORT_GRADIENT_START, 0, getHeight(), Theme.BUTTON_IMPORT_GRADIENT_END));
                     g2.fill(rr);
-                }
-                else
-                {
-                    g2.setColor(Theme.BUTTON_IMPORT_IDLE);
+                } else {
+                    g2.setPaint(new GradientPaint(0, 0, Theme.BUTTON_IMPORT_IDLE, 0, getHeight(), Theme.BUTTON_IMPORT_IDLE));
                     g2.fill(rr);
                 }
 
@@ -329,35 +363,25 @@ public class HomePanel extends JPanel {
 
                 GradientPaint gp;
 
-                if (pressed)
-                {
-                    gp = new GradientPaint(0, 0, Theme.BUTTON_ANALYZE_PRESSED_START, getWidth(), getHeight(), Theme.BUTTON_ANALYZE_PRESSED_END);
-                }
-                else if (hover)
-                {
-                    gp = new GradientPaint(0, 0, Theme.BUTTON_ANALYZE_HOVER_START, getWidth(), getHeight(), Theme.BUTTON_ANALYZE_HOVER_END);
-                }
-                else
-                {
-                    gp = new GradientPaint(0, 0, Theme.BUTTON_ANALYZE_START, getWidth(), getHeight(), Theme.BUTTON_ANALYZE_END);
+                if (pressed) {
+                    gp = new GradientPaint(0, 0, Theme.BUTTON_ANALYZE_PRESSED_START, 0, getHeight(), Theme.BUTTON_ANALYZE_PRESSED_END);
+                } else if (hover) {
+                    gp = new GradientPaint(0, 0, Theme.BUTTON_ANALYZE_HOVER_START, 0, getHeight(), Theme.BUTTON_ANALYZE_HOVER_END);
+                } else {
+                    gp = new GradientPaint(0, 0, Theme.BUTTON_ANALYZE_START, 0, getHeight(), Theme.BUTTON_ANALYZE_END);
                 }
 
                 g2.setPaint(gp);
                 g2.fill(rr);
 
-                GradientPaint shine = new GradientPaint(
-                        0, 0,
-                        new Color(255, 255, 255, hover ? 40 : 25),
-                        0, getHeight() / 2f,
-                        new Color(255, 255, 255, 0)
-                );
+                GradientPaint shine = new GradientPaint(0, 0, new Color(255,255,255,60), 0, getHeight(), new Color(255,255,255,0));
 
                 g2.setPaint(shine);
                 g2.fill(rr);
 
                 if (hover) {
                     g2.setStroke(new BasicStroke(2f));
-                    g2.setColor(Theme.BUTTON_ANALYZE_GLOW);
+                    g2.setColor(new Color(255,255,255,30));
                     g2.draw(new RoundRectangle2D.Float(-2, -2, getWidth() + 4, getHeight() + 4, 54, 54));
                 }
 
@@ -382,6 +406,61 @@ public class HomePanel extends JPanel {
         return btn;
     }
 
+    private JButton createClearButton(String text) {
+        JButton btn = new JButton(text) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+                boolean hover = getModel().isRollover();
+                boolean pressed = getModel().isPressed();
+                boolean disabled = !isEnabled();
+
+                RoundRectangle2D.Float rr = new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), 20, 20);
+
+                GradientPaint gp;
+                if (disabled) {
+                    g2.setColor(Theme.BUTTON_IMPORT_IDLE.darker());
+                    g2.fill(rr);
+                } else if (pressed) {
+                    gp = new GradientPaint(0, 0, Theme.BUTTON_IMPORT_PRESSED, getWidth(), getHeight(), Theme.BUTTON_IMPORT_PRESSED);
+                    g2.setPaint(gp);
+                    g2.fill(rr);
+                } else if (hover) {
+                    gp = new GradientPaint(0, 0, Theme.BUTTON_IMPORT_GRADIENT_START, getWidth(), getHeight(), Theme.BUTTON_IMPORT_GRADIENT_END);
+                    g2.setPaint(gp);
+                    g2.fill(rr);
+                } else {
+                    g2.setColor(Theme.BUTTON_IMPORT_IDLE);
+                    g2.fill(rr);
+                }
+
+                g2.setStroke(new BasicStroke(1.2f));
+                GradientPaint border = new GradientPaint(0, 0, Theme.BUTTON_IMPORT_BORDER_START, getWidth(), getHeight(), Theme.BUTTON_IMPORT_BORDER_END);
+                g2.setPaint(border);
+                g2.draw(rr);
+
+                g2.setColor(disabled ? Theme.SUBTEXT : (hover ? Theme.BUTTON_TEXT : Theme.CARD_LABEL));
+
+                FontMetrics fm = g2.getFontMetrics();
+                int tx = (getWidth() - fm.stringWidth(getText())) / 2;
+                int ty = (getHeight() + fm.getAscent() - fm.getDescent()) / 2;
+
+                g2.drawString(getText(), tx, ty);
+
+                g2.dispose();
+            }
+        };
+
+        btn.setFont(HKModular.deriveFont(12f));
+        btn.setOpaque(false);
+        btn.setContentAreaFilled(false);
+        btn.setBorderPainted(false);
+        btn.setFocusPainted(false);
+        btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        return btn;
+    }
 
     public void FilePicker(MainFrame parent, JButton targetButton, JTextArea targetTextArea) {
         FileDialog fileDialog = new FileDialog(parent, "Open Text File", FileDialog.LOAD);
@@ -418,9 +497,9 @@ public class HomePanel extends JPanel {
 
         targetButton.setText(file.getName());
         targetButton.setEnabled(false);
+
+        updateActionButtonsState();
     }
-
-
     private static class RoundedGlowBorder extends AbstractBorder {
 
         private final int radius;
@@ -486,6 +565,29 @@ public class HomePanel extends JPanel {
         @Override
         protected JButton createIncreaseButton(int o) {
             return new JButton() {{ setPreferredSize(new Dimension(0, 0)); }};
+        }
+    }
+
+
+    private void attachDocumentListener(JTextArea ta) {
+        ta.getDocument().addDocumentListener(new DocumentListener() {
+            @Override public void insertUpdate(DocumentEvent e) { updateActionButtonsState(); }
+            @Override public void removeUpdate(DocumentEvent e) { updateActionButtonsState(); }
+            @Override public void changedUpdate(DocumentEvent e) { updateActionButtonsState(); }
+        });
+    }
+
+    private void updateActionButtonsState() {
+        boolean aHas = textA != null && !textA.getText().trim().isEmpty() && !textA.getText().equals(PLACEHOLDER);
+        boolean bHas = textB != null && !textB.getText().trim().isEmpty() && !textB.getText().equals(PLACEHOLDER);
+        boolean enable = aHas && bHas;
+        if (clearButton != null) {
+            clearButton.setEnabled(enable);
+            clearButton.repaint();
+        }
+        if (analyzeButton != null) {
+            analyzeButton.setEnabled(enable);
+            analyzeButton.repaint();
         }
     }
 }

@@ -83,7 +83,7 @@ public class Metrics {
             Integer score = afinnDictionary.get(w.toLowerCase());
 
             if (score == null) {
-                continue; // Ignore words not in AFINN
+                continue; // ignore words that arent in AFINN
             }
 
             totalScore += score;
@@ -102,20 +102,11 @@ public class Metrics {
             return Arrays.asList(totalScore, 0.0, 0.0, 0.0);
         }
 
-        double positivePercent =
-                (double) positiveCount / Math.abs(sentimentWordCount);
+        double positivePercent = (double) positiveCount / Math.abs(sentimentWordCount);
+        double neutralPercent = (double) neutralCount / Math.abs(sentimentWordCount);
+        double negativePercent = (double) negativeCount / Math.abs(sentimentWordCount);
 
-        double neutralPercent =
-                (double) neutralCount / Math.abs(sentimentWordCount);
-
-        double negativePercent =
-                (double) negativeCount / Math.abs(sentimentWordCount);
-
-        return Arrays.asList(
-                totalScore,
-                positivePercent,
-                neutralPercent,
-                negativePercent
+        return Arrays.asList(totalScore, positivePercent, neutralPercent, negativePercent
         );
     }
 

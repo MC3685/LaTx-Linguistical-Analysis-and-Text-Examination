@@ -204,8 +204,6 @@ public class SettingsPanel extends JPanel {
     private void updateLayout() {
 
         int w = getWidth();
-        int h = getHeight();
-
         int topMargin = 40;
 
         title.setBounds(0, topMargin, w, 50);

@@ -309,8 +309,8 @@ public class ResultsPanel extends JPanel {
         title.setForeground(Theme.TITLE);
         contentPanel.add(title);
 
-        colHeaderA = lbl("TEXT  A", HKModular, Theme.CARD_LABEL, 13f, SwingConstants.CENTER);
-        colHeaderB = lbl("TEXT  B", HKModular, Theme.CARD_LABEL, 13f, SwingConstants.CENTER);
+        colHeaderA = lbl("TEXT  A", HKModular, Theme.CARD_LABEL, 18f, SwingConstants.CENTER);
+        colHeaderB = lbl("TEXT  B", HKModular, Theme.CARD_LABEL, 18f, SwingConstants.CENTER);
         // Letter-spacing via HTML (same trick used in HomePanel card labels)
         colHeaderA.setText("<html><body style='letter-spacing:4px'>TEXT A</body></html>");
         colHeaderB.setText("<html><body style='letter-spacing:4px'>TEXT B</body></html>");
@@ -322,10 +322,10 @@ public class ResultsPanel extends JPanel {
         contentPanel.add(statsCardA);
         contentPanel.add(statsCardB);
         for (int i = 0; i < 6; i++) {
-            statNameA[i] = lbl(STAT_NAMES[i], HKModular, Theme.SUBTEXT, 11f, SwingConstants.LEFT);
-            statValA[i]  = lbl("—", HKModular, Theme.TEXT_AREA_TEXT, 11f, SwingConstants.RIGHT);
-            statNameB[i] = lbl(STAT_NAMES[i], HKModular, Theme.SUBTEXT,        11f, SwingConstants.LEFT);
-            statValB[i]  = lbl("—", HKModular, Theme.TEXT_AREA_TEXT, 11f, SwingConstants.RIGHT);
+            statNameA[i] = lbl(STAT_NAMES[i], HKModular, Theme.SUBTEXT, 13f, SwingConstants.LEFT);
+            statValA[i]  = lbl("—", HKModular, Theme.TEXT_AREA_TEXT, 13f, SwingConstants.RIGHT);
+            statNameB[i] = lbl(STAT_NAMES[i], HKModular, Theme.SUBTEXT, 13f, SwingConstants.LEFT);
+            statValB[i]  = lbl("—", HKModular, Theme.TEXT_AREA_TEXT, 13f, SwingConstants.RIGHT);
             statsCardA.add(statNameA[i]); statsCardA.add(statValA[i]);
             statsCardB.add(statNameB[i]); statsCardB.add(statValB[i]);
         }
@@ -335,10 +335,10 @@ public class ResultsPanel extends JPanel {
         contentPanel.add(wordsCardA);
         contentPanel.add(wordsCardB);
         for (int i = 0; i < 10; i++) {
-            wordRankA[i] = lbl((i + 1) + ".", HKModular, Theme.ACCENT_PURPLE, 13f, SwingConstants.RIGHT);
-            wordRankB[i] = lbl((i + 1) + ".", HKModular, Theme.ACCENT_PURPLE, 13f, SwingConstants.RIGHT);
-            wordTextA[i] = lbl("—", HKModular, Theme.TEXT_AREA_TEXT, 14f, SwingConstants.LEFT);
-            wordTextB[i] = lbl("—", HKModular, Theme.TEXT_AREA_TEXT, 14f, SwingConstants.LEFT);
+            wordRankA[i] = lbl((i + 1) + ".", HKModular, Theme.ACCENT_PURPLE, 15f, SwingConstants.RIGHT);
+            wordRankB[i] = lbl((i + 1) + ".", HKModular, Theme.ACCENT_PURPLE, 15f, SwingConstants.RIGHT);
+            wordTextA[i] = lbl("—", HKModular, Theme.TEXT_AREA_TEXT, 15f, SwingConstants.LEFT);
+            wordTextB[i] = lbl("—", HKModular, Theme.TEXT_AREA_TEXT, 15f, SwingConstants.LEFT);
             wordsCardA.add(wordRankA[i]); wordsCardA.add(wordTextA[i]);
             wordsCardB.add(wordRankB[i]); wordsCardB.add(wordTextB[i]);
         }
@@ -382,15 +382,12 @@ public class ResultsPanel extends JPanel {
         contentPanel.add(conchCardA);
         contentPanel.add(conchCardB);
 
-        //conchTextA = lbl("Awaiting analysis…", "Consolas", Theme.TEXT, 13f, SwingConstants.LEFT);
-        //conchTextB = lbl("Awaiting analysis…", Architype, Theme.TEXT, 13f, SwingConstants.LEFT);
         conchTextA = new JLabel("Awaiting analysis…", SwingConstants.LEFT);
         conchTextA.setForeground(Theme.TEXT);
         conchTextA.setFont(new Font("Consolas", Font.PLAIN,  15));
         conchTextB = new JLabel("Awaiting analysis…", SwingConstants.LEFT);
         conchTextB.setForeground(Theme.TEXT);
         conchTextB.setFont(new Font("Consolas", Font.PLAIN,  15));
-
 
         conchTextA.setVerticalAlignment(SwingConstants.TOP);
         conchTextB.setVerticalAlignment(SwingConstants.TOP);
@@ -402,7 +399,6 @@ public class ResultsPanel extends JPanel {
         scoreCard.add(scorePanel);
         contentPanel.add(scoreCard);
 
-        // Ensure labels reflect the current theme after build
         updateThemeLabels();
 
         scrollPane = createStyledScroll(contentPanel);
@@ -432,7 +428,7 @@ public class ResultsPanel extends JPanel {
         int sH  = 180;
         int wH  = 330;
         int seH = 200;
-        int cH  = 200;
+        int cH  = 250;
         int scH = 300;
 
         // Total content height
@@ -583,51 +579,6 @@ public class ResultsPanel extends JPanel {
         @Override
         public Insets getBorderInsets(Component c) {
             return new Insets(radius / 2, radius / 2, radius / 2, radius / 2);
-        }
-    }
-
-    private static class ModernScrollBarUI extends javax.swing.plaf.basic.BasicScrollBarUI {
-        @Override
-        protected void configureScrollBarColors() {
-            this.thumbColor = new Color(255, 255, 255, 60);
-            this.trackColor = new Color(0, 0, 0, 0);
-        }
-
-        @Override
-        protected JButton createDecreaseButton(int orientation) {
-            return createZeroButton();
-        }
-
-        @Override
-        protected JButton createIncreaseButton(int orientation) {
-            return createZeroButton();
-        }
-
-        private JButton createZeroButton() {
-            JButton btn = new JButton();
-            btn.setPreferredSize(new Dimension(0, 0));
-            btn.setMinimumSize(new Dimension(0, 0));
-            btn.setMaximumSize(new Dimension(0, 0));
-            return btn;
-        }
-
-        @Override
-        protected void paintThumb(Graphics g, JComponent c, Rectangle thumbBounds) {
-            if (thumbBounds.isEmpty() || !scrollbar.isEnabled()) return;
-
-            Graphics2D g2 = (Graphics2D) g.create();
-            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g2.setColor(thumbColor);
-            g2.fill(new RoundRectangle2D.Float(
-                    thumbBounds.x + 2, thumbBounds.y,
-                    thumbBounds.width - 4, thumbBounds.height,
-                    8, 8));
-            g2.dispose();
-        }
-
-        @Override
-        protected void paintTrack(Graphics g, JComponent c, Rectangle trackBounds) {
-            // Transparent track
         }
     }
 }

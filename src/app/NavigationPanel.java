@@ -2,7 +2,6 @@ package app;
 
 import javax.swing.*;
 import java.awt.*;
-//import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import components.FontLoader;
@@ -47,9 +46,13 @@ public class NavigationPanel extends JPanel {
 
         add(navButton("? HELP", e -> showHelp(frame)));
 
-        add(Box.createVerticalStrut(40));
+        add(Box.createVerticalStrut(getHeight()+280));
 
-        add(navButton("... EXIT", e -> System.exit(0)));
+        JButton exitBtn = navButton(" EXIT", e -> System.exit(0));
+        exitBtn.setFont(Architype.deriveFont(50f));
+
+
+        add(exitBtn);
     }
 
     public void applyTheme()

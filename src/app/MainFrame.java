@@ -2,7 +2,6 @@ package app;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 
 public class MainFrame extends JFrame {
 
@@ -59,15 +58,6 @@ public class MainFrame extends JFrame {
         SwingUtilities.updateComponentTreeUI(this);
 
         repaint();
-    }
-
-    private JPanel createSettingsPanel() {
-
-        JPanel panel = new JPanel();
-
-        panel.setBackground(Theme.BACKGROUND);
-
-        return panel;
     }
 
     public void showHome() {

@@ -25,7 +25,7 @@ public class AnalysisResult {
     public String getConclusion() {
 
         String authorResult =
-                similarity >= 70
+                similarity >= 75
                         ? "likely written by the same author"
                         : "likely written by different authors";
 
@@ -58,22 +58,18 @@ public class AnalysisResult {
     }
 
     public Object[][] getTopWords() {
-        // Direct access to public wordFreq fields
         Map<String, Integer> freqA = (profileA != null) ? profileA.wordFreq : null;
         Map<String, Integer> freqB = (profileB != null) ? profileB.wordFreq : null;
 
-        // 1. Gather all unique words across both profiles
         Set<String> allWords = new HashSet<>();
         if (freqA != null) allWords.addAll(freqA.keySet());
         if (freqB != null) allWords.addAll(freqB.keySet());
 
-        // 2. Build full list of comparisons and calculate individual metrics
         List<WordComparison> fullList = new ArrayList<>();
         for (String word : allWords) {
             int countA = (freqA != null) ? freqA.getOrDefault(word, 0) : 0;
             int countB = (freqB != null) ? freqB.getOrDefault(word, 0) : 0;
 
-            // Simple proportional similarity (closer counts = higher similarity score)
             double wordSim = 0.0;
             if (countA > 0 || countB > 0) {
                 wordSim = (double) Math.min(countA, countB) / Math.max(countA, countB);
@@ -82,11 +78,9 @@ public class AnalysisResult {
             fullList.add(new WordComparison(word, countA, countB, wordSim));
         }
 
-        // 3. Sort by total frequency descending and limit to the top 10 elements
         List<WordComparison> top10List = fullList.stream()
                 .sorted((w1, w2) -> Integer.compare(w2.getTotalCount(), w1.getTotalCount())).limit(10).collect(Collectors.toList());
 
-        // 4. Map the top 10 elements into the 2D Object array
         Object[][] dataMatrix = new Object[top10List.size()][4];
         for (int i = 0; i < top10List.size(); i++) {
             WordComparison item = top10List.get(i);
@@ -99,7 +93,6 @@ public class AnalysisResult {
         return dataMatrix;
     }
 
-    // Static inner helper class encapsulating row data
     private static class WordComparison {
         private final String word;
         private final int countA;
@@ -118,7 +111,6 @@ public class AnalysisResult {
         public int getCountB() { return countB; }
         public double getSimilarity() { return similarity; }
 
-        // Helper to find the highest occurring word across both texts combined
         public int getTotalCount() { return countA + countB; }
     }
 }

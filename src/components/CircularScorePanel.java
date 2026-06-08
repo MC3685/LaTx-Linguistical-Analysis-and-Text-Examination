@@ -7,7 +7,7 @@ import java.awt.*;
 
 public class CircularScorePanel extends JPanel {
 
-    private double score = 1;
+    private double score = 0;
     private static Color track_color;
 
     public CircularScorePanel() {
