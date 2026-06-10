@@ -43,16 +43,12 @@ public class AnalysisResult {
                         "</html>",
 
                 similarity,
-
                 profileA.avgSentenceLength,
                 profileB.avgSentenceLength,
-
                 profileA.lexicalDiversity * 100,
                 profileB.lexicalDiversity * 100,
-
                 profileA.punctuationDensity * 100,
                 profileB.punctuationDensity * 100,
-
                 authorResult
         );
     }
